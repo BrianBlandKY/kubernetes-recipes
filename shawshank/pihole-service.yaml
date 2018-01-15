@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shawshank-pihole-service
+  namespace: shawshank
+spec:
+  selector:
+    app: shawshank-pihole
+  ports: 
+  - name: http
+    protocol: TCP
+    port: 8000
+    targetPort: 80
+  - name: dns-tcp
+    protocol: TCP
+    port: 53
+    targetPort: 53
+  - name: dns-udp
+    protocol: UDP
+    port: 53
+    targetPort: 53
+  externalIPs:
+  - 10.0.0.10 # Node IP Address
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shawshank-pihole-deployment
+  namespace: shawshank
+  labels:
+    app: shawshank-pihole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shawshank-pihole
+  template:
+    metadata:
+      labels:
+        app: shawshank-pihole
+    spec:
+      containers:
+      - name: shawshank-pihole
+        image: diginc/pi-hole:debian_v3.2.1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SERVER_IP
+          value: 10.0.0.10 # Node IP Address
+        ports:
+        - containerPort: 80
+        - containerPort: 53
+        resources:
+          requests:
+            memory: "256Mi"     # 256mb
+            cpu: "200m"         # 1/5 CPU
+          limits:               
+            memory: "384Mi"     # 384mb
+            cpu: "444m"         # 2.25/5 CPU
+        restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node

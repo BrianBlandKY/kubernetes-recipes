@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shawshank-samba-service
+  namespace: shawshank
+spec:
+  selector:
+    app: shawshank-samba
+  ports: 
+  - name: samba-tcp-139
+    protocol: TCP
+    port: 139
+    targetPort: 139
+  - name: samba-tcp-445
+    protocol: TCP
+    port: 445
+    targetPort: 445
+  externalIPs:
+  - 10.0.0.10 # Node IP Address
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shawshank-samba-deployment
+  namespace: shawshank
+  labels:
+    app: shawshank-samba
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shawshank-samba
+  template:
+    metadata:
+      labels:
+        app: shawshank-samba
+    spec:
+      containers:
+      - name: shawshank-samba
+        image: 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 139
+        - containerPort: 445
+        resources:
+          requests:
+            memory: "32Mi"      # Review
+            cpu: "125m"         # Review
+          limits:               
+            memory: "64Mi"      # Review
+            cpu: "250m"         # Review
+        restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
