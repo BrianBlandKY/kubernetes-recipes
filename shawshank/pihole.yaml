@@ -9,7 +9,7 @@ spec:
   ports: 
   - name: http
     protocol: TCP
-    port: 80
+    port: 8080
     targetPort: 80
   - name: dns-tcp
     protocol: TCP
@@ -25,7 +25,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shawshank-pihole-deployment
+  name: shawshank-pihole
   namespace: shawshank
   labels:
     app: shawshank-pihole
