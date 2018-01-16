@@ -63,7 +63,7 @@ spec:
       labels:
         app: shawshank-plex
     spec:
-      hostname: plex.shawshank
+      hostname: plex-shawshank
       containers:
       - name: shawshank-plex
         image: plexinc/pms-docker

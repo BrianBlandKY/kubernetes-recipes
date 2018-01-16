@@ -35,7 +35,7 @@ spec:
       labels:
         app: shawshank-samba
     spec:
-      hostname: samba.shawshank
+      hostname: samba-shawshank
       containers:
       - name: shawshank-samba
         image: dperson/samba

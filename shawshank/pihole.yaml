@@ -39,7 +39,7 @@ spec:
       labels:
         app: shawshank-pihole
     spec:
-      hostname: pihole.shawshank
+      hostname: pihole-shawshank
       containers:
       - name: shawshank-pihole
         image: diginc/pi-hole:debian_v3.2.1
