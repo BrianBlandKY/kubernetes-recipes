@@ -37,18 +37,28 @@ spec:
     spec:
       containers:
       - name: shawshank-samba
-        image: 
+        image: dperson/samba
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 139
         - containerPort: 445
         resources:
           requests:
-            memory: "32Mi"      # Review
-            cpu: "125m"         # Review
+            memory: "256Mi"     # 256 MB
+            cpu: "250m"         # 1/4 CPU
           limits:               
-            memory: "64Mi"      # Review
-            cpu: "250m"         # Review
+            memory: "384Mi"     # 384 MB
+            cpu: "750m"         # 3/4 CPU
         restartPolicy: Always
+        volumeMounts:
+        - mountPath: /vault
+          name: vault
+        args:
+          - '-s "vault;/vault;yes;no;yes;all;none;[];Shawshank Vault"'
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
+      volumes:
+      - name: vault
+        hostPath:
+          path: /media/vault  # directory location on host
+          type: Directory
