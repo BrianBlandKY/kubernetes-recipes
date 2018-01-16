@@ -40,7 +40,10 @@ spec:
       labels:
         app: shawshank-pihole
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node    
       hostname: pihole-shawshank
+      hostNetwork: true
       containers:
       - name: shawshank-pihole
         image: diginc/pi-hole:debian_v3.2.1
@@ -49,7 +52,11 @@ spec:
         - name: TZ
           value: "America/New_York"
         - name: WEBPASSWORD
-          value: 
+          value: ""
+        - name: DNS1
+          value: 8.8.8.8
+        - name: DNS2
+          value: 8.8.4.4
         - name: ServerIP
           value: 10.0.0.10 # Node IP Address
         ports:
@@ -71,8 +78,6 @@ spec:
           name: pihole
         - mountPath: /etc/dnsmasq.d
           name: dnsmasq
-      nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       volumes:
       - name: pihole
         hostPath:
