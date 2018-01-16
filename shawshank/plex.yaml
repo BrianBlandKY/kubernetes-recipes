@@ -1,0 +1,124 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shawshank-plex-service
+  namespace: shawshank
+spec:
+  selector:
+    app: shawshank-plex
+  ports: 
+  - name: plex-tcp-3005
+    protocol: TCP
+    port: 3005
+    targetPort: 3005
+  - name: plex-tcp-8324
+    protocol: TCP
+    port: 8324
+    targetPort: 8324
+  - name: plex-udp-1900
+    protocol: UDP
+    port: 1900
+    targetPort: 1900
+  - name: plex-tcp-32400
+    protocol: TCP
+    port: 32400
+    targetPort: 32400    
+  - name: plex-udp-32410
+    protocol: UDP
+    port: 32410
+    targetPort: 32410
+  - name: plex-udp-32412
+    protocol: UDP
+    port: 32412
+    targetPort: 32412
+  - name: plex-udp-32413
+    protocol: UDP
+    port: 32413
+    targetPort: 32413
+  - name: plex-udp-32414
+    protocol: UDP
+    port: 32414
+    targetPort: 32414
+  - name: plex-tcp-32469
+    protocol: TCP
+    port: 32469
+    targetPort: 32469    
+  externalIPs:
+  - 10.0.0.10 # Node IP Address
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shawshank-plex-deployment
+  namespace: shawshank
+  labels:
+    app: shawshank-plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shawshank-plex
+  template:
+    metadata:
+      labels:
+        app: shawshank-plex
+    spec:
+      hostname: plex.shawshank
+      containers:
+      - name: shawshank-plex
+        image: plexinc/pms-docker
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: TZ
+          value: "America/New_York"
+        - name: ADVERTISE_IP
+          value: "http://10.0.0.10:32400/"
+        ports:
+        - containerPort: 1900
+          protocol: UDP
+        - containerPort: 3005
+          protocol: TCP
+        - containerPort: 8324
+          protocol: TCP
+        - containerPort: 32400
+          protocol: TCP
+        - containerPort: 32410
+          protocol: UCP
+        - containerPort: 32412
+          protocol: UDP
+        - containerPort: 32413
+          protocol: UDP
+        - containerPort: 32414
+          protocol: UDP
+        - containerPort: 32469
+          protocol: TCP
+        resources:
+          requests:
+            memory: "1028Mi"    # 1028 MB
+            cpu: "1000m"        # 1 CPU
+          limits:               
+            memory: "2048Mi"    # 2048 MB
+            cpu: "1250m"        # 1 1/4 CPU
+        restartPolicy: Always
+        volumeMounts:
+        - mountPath: /media
+          name: media
+        - mountPath: /transcode
+          name: transcode
+        - mountPath: /config
+          name: config
+      nodeSelector:
+        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
+      volumes:
+      - name: media
+        hostPath:
+          path: /apps/plex/media  # directory location on host
+          type: Directory
+      - name: transcode
+        hostPath:
+          path: /apps/plex/transcode  # directory location on host
+          type: Directory
+      - name: config
+        hostPath:
+          path: /apps/plex/config  # directory location on host
+          type: Directory

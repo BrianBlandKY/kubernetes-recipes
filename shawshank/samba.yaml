@@ -35,13 +35,16 @@ spec:
       labels:
         app: shawshank-samba
     spec:
+      hostname: samba.shawshank
       containers:
       - name: shawshank-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 139
+          protocol: TCP
         - containerPort: 445
+          protocol: TCP
         resources:
           requests:
             memory: "256Mi"     # 256 MB
@@ -60,5 +63,5 @@ spec:
       volumes:
       - name: vault
         hostPath:
-          path: /media/vault  # directory location on host
+          path: /apps/samba/vault  # directory location on host
           type: Directory
