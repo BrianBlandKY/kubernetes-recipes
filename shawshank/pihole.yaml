@@ -45,7 +45,7 @@ spec:
         image: diginc/pi-hole:debian_v3.2.1
         imagePullPolicy: IfNotPresent
         env:
-        - name: SERVER_IP
+        - name: ServerIP
           value: 10.0.0.10 # Node IP Address
         ports:
         - containerPort: 80
