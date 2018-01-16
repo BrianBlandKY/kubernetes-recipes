@@ -61,6 +61,5 @@ spec:
           limits:               
             memory: "384Mi"     # 384mb
             cpu: "444m"         # 2.25/5 CPU
-        restartPolicy: Always
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node

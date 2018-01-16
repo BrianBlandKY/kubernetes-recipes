@@ -99,7 +99,6 @@ spec:
           limits:               
             memory: "2048Mi"    # 2048 MB
             cpu: "1250m"        # 1 1/4 CPU
-        restartPolicy: Always
         volumeMounts:
         - mountPath: /media
           name: media

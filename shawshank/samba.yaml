@@ -52,7 +52,6 @@ spec:
           limits:               
             memory: "384Mi"     # 384 MB
             cpu: "750m"         # 3/4 CPU
-        restartPolicy: Always
         volumeMounts:
         - mountPath: /vault
           name: vault
