@@ -39,12 +39,16 @@ spec:
       labels:
         app: shawshank-pihole
     spec:
-      #hostname: pihole-shawshank
+      hostname: pihole-shawshank
       containers:
       - name: shawshank-pihole
         image: diginc/pi-hole:debian_v3.2.1
         imagePullPolicy: IfNotPresent
         env:
+        - name: TZ
+          value: "America/New_York"
+        - name: WEBPASSWORD
+          value: 
         - name: ServerIP
           value: 10.0.0.10 # Node IP Address
         ports:
