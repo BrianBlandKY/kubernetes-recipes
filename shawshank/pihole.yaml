@@ -65,7 +65,7 @@ spec:
         - mountPath: /etc/pihole
           name: pihole
         - mountPath: /etc/dnsmasq.d
-          name: dnsmasq.d
+          name: dnsmasq
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       volumes:
@@ -73,7 +73,7 @@ spec:
         hostPath:
           path: /apps/pihole/pihole  # directory location on host
           type: Directory
-      - name: dnsmasq.d
+      - name: dnsmasq
         hostPath:
           path: /apps/pihole/dnsmasq.d  # directory location on host
           type: Directory
