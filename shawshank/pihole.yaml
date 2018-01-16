@@ -39,7 +39,7 @@ spec:
       labels:
         app: shawshank-pihole
     spec:
-      hostname: pihole-shawshank
+      #hostname: pihole-shawshank
       containers:
       - name: shawshank-pihole
         image: diginc/pi-hole:debian_v3.2.1
@@ -61,5 +61,19 @@ spec:
           limits:               
             memory: "384Mi"     # 384mb
             cpu: "444m"         # 2.25/5 CPU
+        volumeMounts:
+        - mountPath: /etc/pihole
+          name: pihole
+        - mountPath: /etc/dnsmasq.d
+          name: dnsmasq.d
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
+      volumes:
+      - name: pihole
+        hostPath:
+          path: /apps/pihole/pihole  # directory location on host
+          type: Directory
+      - name: dnsmasq.d
+        hostPath:
+          path: /apps/pihole/dnsmasq.d  # directory location on host
+          type: Directory
