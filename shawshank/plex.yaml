@@ -100,8 +100,8 @@ spec:
             memory: "2048Mi"    # 2048 MB
             cpu: "1250m"        # 1 1/4 CPU
         volumeMounts:
-        - mountPath: /media
-          name: media
+        - mountPath: /data
+          name: data
         - mountPath: /transcode
           name: transcode
         - mountPath: /config
@@ -109,9 +109,9 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       volumes:
-      - name: media
+      - name: data
         hostPath:
-          path: /apps/plex/media  # directory location on host
+          path: /apps/samba/media  # directory location on host
           type: Directory
       - name: transcode
         hostPath:
