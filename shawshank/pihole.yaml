@@ -43,7 +43,7 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node    
-      hostname: pihole-shawshank
+      #hostname: pihole-shawshank
       #hostNetwork: true
       containers:
       - name: shawshank-pihole
