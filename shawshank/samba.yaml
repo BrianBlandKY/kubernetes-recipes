@@ -59,7 +59,9 @@ spec:
         - mountPath: /vault
           name: vault
         args:
-          - '-s "vault;/vault;yes;no;yes;all;none;none;Shawshank Vault"'
+          - '-p 777'
+          - '-u "user;badpass"'
+          - '-s "vault;/vault;yes;no;yes;all;none;user"'
       volumes:
       - name: vault
         hostPath:
