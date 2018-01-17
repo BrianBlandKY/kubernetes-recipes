@@ -25,6 +25,16 @@
 #   - 10.0.0.10 # Node IP Address
 # ---
 apiVersion: apps/v1
+kind: Endpoints
+subsets:
+  - addresses:
+    - name: IP
+      value: 10.0.0.10
+  - ports:
+    - name: http
+      port: 80
+      protocol: TCP
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shawshank-pihole
