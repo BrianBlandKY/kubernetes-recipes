@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: shawshank-samba
+  type: NodePort
   ports: 
   - name: samba-tcp-139
     protocol: TCP
@@ -21,7 +22,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shawshank-samba-deployment
+  name: shawshank-samba
   namespace: shawshank
   labels:
     app: shawshank-samba
@@ -35,7 +36,9 @@ spec:
       labels:
         app: shawshank-samba
     spec:
-      hostname: samba-shawshank
+      #hostname: samba-shawshank
+      nodeSelector:
+        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       containers:
       - name: shawshank-samba
         image: dperson/samba
@@ -57,8 +60,6 @@ spec:
           name: vault
         args:
           - '-s "vault;/vault;yes;no;yes;all;none;[];Shawshank Vault"'
-      nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       volumes:
       - name: vault
         hostPath:
