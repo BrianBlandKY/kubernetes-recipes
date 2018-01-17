@@ -40,6 +40,7 @@ spec:
       labels:
         app: shawshank-pihole
     spec:
+      hostname: plex-shawshank
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node    
       containers:

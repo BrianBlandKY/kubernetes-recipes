@@ -64,6 +64,8 @@ spec:
         app: shawshank-plex
     spec:
       hostname: plex-shawshank
+      nodeSelector:
+        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       containers:
       - name: shawshank-plex
         image: plexinc/pms-docker
@@ -73,6 +75,7 @@ spec:
           value: "America/New_York"
         - name: ADVERTISE_IP
           value: "http://10.0.0.10:32400/"
+        # Add Claim
         ports:
         - containerPort: 1900
           protocol: UDP
@@ -106,8 +109,6 @@ spec:
           name: transcode
         - mountPath: /config
           name: config
-      nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       volumes:
       - name: data
         hostPath:

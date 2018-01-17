@@ -36,7 +36,7 @@ spec:
       labels:
         app: shawshank-samba
     spec:
-      #hostname: samba-shawshank
+      hostname: samba-shawshank
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
       containers:
