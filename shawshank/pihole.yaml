@@ -11,7 +11,6 @@ spec:
   - name: http
     protocol: TCP
     port: 80
-    #hostPort: 80
     targetPort: 80
   - name: dns-tcp
     protocol: TCP
@@ -24,19 +23,6 @@ spec:
   externalIPs:
   - 10.0.0.10 # Node IP Address
 ---
-#apiVersion: v1
-#kind: Endpoints
-#metadata:
-#  name: shawshank-pihole
-#  namespace: shawshank
-#subsets:
-#  - addresses:
-#    - ip: 10.0.0.10
-#    ports:
-#    - name: http
-#      port: 8080
-#      protocol: TCP
-#---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -56,8 +42,6 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node    
-      #hostname: pihole-shawshank
-      #hostNetwork: true
       containers:
       - name: shawshank-pihole
         image: diginc/pi-hole:debian_v3.2.1
@@ -65,8 +49,6 @@ spec:
         env:
         - name: TZ
           value: "America/New_York"
-        #- name: WEBPASSWORD
-        #  value: "pihole"
         - name: DNS1
           value: 8.8.8.8
         - name: DNS2
@@ -75,13 +57,10 @@ spec:
           value: 10.0.0.10 # Node IP Address
         ports:
         - containerPort: 80
-          #hostPort: 8080
           protocol: TCP
         - containerPort: 53
-          #hostPort: 53
           protocol: TCP
         - containerPort: 53
-          #hostPort: 53
           protocol: UDP
         resources:
           requests:
@@ -90,17 +69,3 @@ spec:
           limits:               
             memory: "384Mi"     # 384mb
             cpu: "444m"         # 2.25/5 CPU
-      #   volumeMounts:
-      #  - mountPath: /etc/pihole
-      #    name: pihole
-      #  - mountPath: /etc/dnsmasq.d
-      #    name: dnsmasq
-      #volumes:
-      #- name: pihole
-      #  hostPath:
-      #    path: /apps/pihole/pihole  # directory location on host
-      #    type: Directory
-      #- name: dnsmasq
-      #  hostPath:
-      #    path: /apps/pihole/dnsmasq.d  # directory location on host
-      #    type: Directory
