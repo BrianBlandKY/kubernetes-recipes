@@ -59,7 +59,7 @@ spec:
         - mountPath: /vault
           name: vault
         args:
-          - '-s "vault;/vault;yes;no;yes;all;none;[];Shawshank Vault"'
+          - '-s "vault;/vault;yes;no;yes;all;none;none;Shawshank Vault"'
       volumes:
       - name: vault
         hostPath:
