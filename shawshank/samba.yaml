@@ -43,7 +43,6 @@ spec:
       - name: shawshank-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        # Can this be cleaner?
         args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Media"]
         ports:
         - containerPort: 139
@@ -61,7 +60,7 @@ spec:
         - mountPath: /apps/vault
           name: vault
         - mountPath: /apps/media
-          name: vault
+          name: media
       volumes:
       - name: vault
         hostPath:
