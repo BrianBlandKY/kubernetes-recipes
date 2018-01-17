@@ -56,11 +56,17 @@ spec:
             memory: "384Mi"     # 384 MB
             cpu: "750m"         # 3/4 CPU
         volumeMounts:
-        - mountPath: /vault
+        - mountPath: /apps/vault
           name: vault
-        args: ["-r", "-S", "-s", "vault;/vault;yes;no;yes;all;none;[];Shawshank Vault"]
+        - mountPath: /apps/media
+          name: vault
+        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Media"]
       volumes:
       - name: vault
         hostPath:
           path: /apps/samba/vault  # directory location on host
+          type: Directory
+      - name: media
+        hostPath:
+          path: /apps/samba/media  # directory location on host
           type: Directory
