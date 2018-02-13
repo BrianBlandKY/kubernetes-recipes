@@ -1,0 +1,34 @@
+FROM nginx:1.13.8
+
+EXPOSE 80/tcp 
+EXPOSE 443/tcp
+
+# Copy over nothingsbland.conf
+COPY nothingsbland.conf /etc/nginx/conf.d/nothingsbland.conf
+
+# Remove default
+WORKDIR /etc/nginx/conf.d
+RUN rm default.conf
+
+# Certbot Configuration
+# RUN apt-get update  -y && apt-get install -y python-certbot-nginx 
+# Stop Nginx
+# RUN /etc/init.d/nginx stop
+# Get Nginx
+# RUN certbot --authenticator standalone --installer nginx --email brianbland42@gmail.com -d nothingsbland.com -d www.nothingsbland.com
+# Automatic Renewal
+# RUN certbot renew --dry-run
+# Restart Nginx
+# RUN /etc/init.d/nginx start
+
+
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+# Build
+# docker build -t nginx-img -f Dockerfile .
+
+# Run
+# docker run -tdi -p 80:80 -p 443:443 --name nginx nginx-img
+
+# Terminal 
+# docker exec -ti nginx /bin/bash

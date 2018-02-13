@@ -18,3 +18,11 @@ Internal services for personal usage.
 
 - WebServer (Production)
 - WebServer (Internal)
+
+## Usage
+
+``` sh
+kubectl get all --namespace=shawshank           # View all elements for namespace 'shawshank'
+kubectl create -f shawshank/[SERVICE].yaml      # Create all elements defined in yaml spec
+kubectl delete -f shawshank/[SERVICE].yaml      # Delete all elements defines in yaml spec
+```
