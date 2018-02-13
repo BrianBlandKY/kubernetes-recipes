@@ -3,7 +3,7 @@ FROM centos:centos7
 # Web Port
 EXPOSE 8080/tcp 
 
-VOLUME ["/apps/nothingsbland"]
+VOLUME ["/apps/nothingsbland/logs"]
 
 ENV GOPATH /go
 ENV GOBIN /go/bin
@@ -58,7 +58,7 @@ ENTRYPOINT [ "./web", "--config", "app.prod.yaml" ]
 
 # Run
 # docker run -tdi -p 8080:8080 --name nothingsbland nothingsbland-img
-# docker run -tdi -p 8080:8080 -v /Users/bland/Development/Go/src/NothingsBland.com:/apps/nothingsbland --name nothingsbland nothingsbland-img
+# docker ruxn -tdi -p 8080:8080 -v /Users/bland/Development/Go/src/NothingsBland.com:/apps/nothingsbland --name nothingsbland nothingsbland-img
 
 # Exec
 # docker exec -ti nothingsbland sh -c "go run main.go"
