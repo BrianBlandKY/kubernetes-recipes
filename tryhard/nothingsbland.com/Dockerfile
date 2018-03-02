@@ -50,8 +50,8 @@ WORKDIR /go/src/NothingsBland.com/web
 RUN go build
 
 ENTRYPOINT [ "./web", "--config", "app.prod.yaml" ]
-
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
+# CMD ["nginx", "-g", "daemon off;"] #NGINX CMD
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
 # docker build -t nothingsbland-img -f Dockerfile .
