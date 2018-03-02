@@ -1,4 +1,9 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: tryhard
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: tryhard-nothingsbland-service
@@ -8,17 +13,10 @@ spec:
     app: tryhard-nothingsbland
   type: NodePort
   ports: 
-  - name: http
+  - name: http-app
     protocol: TCP
     port: 80
-    targetPort: 80
-  - name: http
-    protocol: TCP
-    port: 8080
-    targetPort: 8080   
-  - name: https
-    protocol: 443
-    targetPort: 443
+    targetPort: 8080
   externalIPs:
   - 172.16.0.10 # Node IP Address
 ---
@@ -43,31 +41,24 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: hazard.tryhard  # Only deploy to Hazard Node    
       containers:
-      - name: tryhard-nothingsbland-nginx
-        image: nothingsbland-nginx:v1.0.0       # Local image reference
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-          protocol: TCP
-        - containerPort: 443
-          protocol: TCP
-        resources:
-          requests:
-            memory: "256Mi"     # 256mb
-            cpu: "200m"         # 1/5 CPU
-          limits:               
-            memory: "384Mi"     # 384mb
-            cpu: "444m"         # 2.25/5 CPU
       - name: tryhard-nothingsbland-app
         image: nothingsbland-app:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
             protocol: TCP
-        resources:
-          requests:
-            memory: "256Mi"     # 256mb
-            cpu: "200m"         # 1/5 CPU
-          limits:               
-            memory: "384Mi"     # 384mb
-            cpu: "444m"         # 2.25/5 CPU
+#        resources:
+#          requests:
+#            memory: "256Mi"     # 256mb
+#            cpu: "200m"         # 1/5 CPU
+#          limits:               
+#            memory: "384Mi"     # 384mb
+#            cpu: "444m"         # 2.25/5 CPU
+        volumeMounts:
+        - mountPath: /apps/nothingsbland/logs
+          name: logs
+      volumes:
+      - name: logs
+        hostPath:
+          path: /apps/logs/nothingsbland
+          type: Directory
