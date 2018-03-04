@@ -39,21 +39,45 @@ spec:
     spec:
       hostname: nothingsbland-tryhard
       nodeSelector:
-        kubernetes.io/hostname: hazard.tryhard  # Only deploy to Hazard Node    
+        kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
       containers:
+      # Nginx Proxy
+      - name: tryhard-nothingsbland-nginx
+        image: nginx-app:v1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SERVER_ADDRESS
+          value: tryhard-nothingsbland-nginx
+        - name: SERVER_PORT
+          value: 8080
+        - name: PROXY_PORT
+          value: 8081
+        ports:
+          - containerPort: 8080 # Nginx
+            protocol: TCP
+          - containerPort: 8081 # App
+            protocol: TCP
+        resources:
+         requests:
+           memory: "256Mi"     # 256mb
+           cpu: "200m"         # 1/5 CPU
+         limits:               
+           memory: "384Mi"     # 384mb
+           cpu: "444m"         # 2.25/5 CPU    
+      # Application
       - name: tryhard-nothingsbland-app
         image: nothingsbland-app:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
             protocol: TCP
-#        resources:
-#          requests:
-#            memory: "256Mi"     # 256mb
-#            cpu: "200m"         # 1/5 CPU
-#          limits:               
-#            memory: "384Mi"     # 384mb
-#            cpu: "444m"         # 2.25/5 CPU
+        resources:
+         requests:
+           memory: "256Mi"     # 256mb
+           cpu: "200m"         # 1/5 CPU
+         limits:               
+           memory: "384Mi"     # 384mb
+           cpu: "444m"         # 2.25/5 CPU
         volumeMounts:
         - mountPath: /apps/nothingsbland/logs
           name: logs
