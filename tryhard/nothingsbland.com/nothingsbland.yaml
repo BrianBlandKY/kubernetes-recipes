@@ -43,7 +43,7 @@ spec:
       containers:
       # Nginx Proxy
       - name: tryhard-nothingsbland-nginx
-        image: nginx-app:v1.0.0
+        image: nginx-img:1.0.0
         imagePullPolicy: IfNotPresent
         env:
         - name: SERVER_ADDRESS
@@ -66,7 +66,7 @@ spec:
            cpu: "444m"         # 2.25/5 CPU    
       # Application
       - name: tryhard-nothingsbland-app
-        image: nothingsbland-app:v1.0.0
+        image: nothingsbland-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
