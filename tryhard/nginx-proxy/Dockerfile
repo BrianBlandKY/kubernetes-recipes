@@ -17,7 +17,7 @@ COPY default.conf.template .
 CMD sh -c "sed 's/PROXY_SERVICE_NAME/$PROXY_SERVICE_NAME/g' default.conf.template >> default.conf && nginx -g 'daemon off;'"
 
 # Build
-# docker build -t nginx-img -f Dockerfile .
+# docker build -t nginx-img:1.0.0 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 8080:8080 -e "PROXY_SERVICE_NAME=192.168.1.8" --name nginx nginx-img

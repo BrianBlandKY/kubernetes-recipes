@@ -30,7 +30,7 @@ COPY haproxy.cfg /etc/haproxy
 CMD ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 
 # Build
-# docker build -t nothingsbland-img -f Dockerfile .
+# docker build -t haproxy-img:1.0.0 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 8080:8080 --name nothingsbland nothingsbland-img
