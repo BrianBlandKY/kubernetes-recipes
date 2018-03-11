@@ -1,12 +1,12 @@
 
 server {
-    listen          SERVER_PORT;
-    server_address  SERVER_ADDRESS;
+    listen          8080;
+    server_name     _;
 
     client_max_body_size 100M;
 
     location / {
-        proxy_pass http://$server_address:PROXY_PORT;
+        proxy_pass http://PROXY_SERVICE_NAME:8080;
     }
 
     error_page  404              /404.html;

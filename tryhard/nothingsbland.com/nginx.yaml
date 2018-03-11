@@ -1,51 +1,39 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nothingsbland-nginx-service
+  name: nginx-nothingsbland
   namespace: tryhard
 spec:
   selector:
-    app: nothingsbland-nginx
-  type: NodePort
-  ports: 
-  - name: http-nginx      # Remove once HAProxy is online.
-    protocol: TCP
-    port: 8080
-    targetPort: 8080
-  externalIPs:
-  - 172.16.0.10 # Node IP Address
+    app: nginx-nothingsbland
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nothingsbland-nginx-deployment
+  name: nginx-nothingsbland
   namespace: tryhard
   labels:
-    app: nothingsbland-nginx
+    app: nginx-nothingsbland
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nothingsbland-nginx
+      app: nginx-nothingsbland
   template:
     metadata:
       labels:
-        app: nothingsbland-nginx
+        app: nginx-nothingsbland
     spec:
-      hostname: nothingsbland-nginx
+      hostname: nginx-nothingsbland
       nodeSelector:
         kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
       containers:
-      - name: nothingsbland-nginx	# Nginx Proxy
+      - name: nginx-nothingsbland	# Nginx Proxy
         image: nginx-img:1.0.0
         imagePullPolicy: IfNotPresent
         env:
-        - name: SERVER_ADDRESS
-          value: "10.99.180.71" # How to dynamically get Service IP? Manual intervention required here (for now)
-        - name: SERVER_PORT
-          value: "8080"         # Testing Port Mirror on Kubernetes
-        - name: PROXY_PORT
-          value: "8080"         # Testing Port Mirror on Kubernetes
+        - name: PROXY_SERVICE_NAME
+          value: "app-nothingsbland"   # Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP
