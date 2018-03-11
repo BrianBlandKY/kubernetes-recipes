@@ -8,10 +8,10 @@ spec:
     app: nothingsbland-nginx
   type: NodePort
   ports: 
-  - name: http-nginx
+  - name: http-nginx      # Remove once HAProxy is online.
     protocol: TCP
-    port: 8081
-    targetPort: 8081
+    port: 8080
+    targetPort: 8080
   externalIPs:
   - 172.16.0.10 # Node IP Address
 ---
@@ -41,18 +41,18 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: SERVER_ADDRESS
-          value: "10.99.180.71"
+          value: "10.99.180.71" # How to dynamically get Service IP? Manual intervention required here (for now)
         - name: SERVER_PORT
-          value: "8081"
+          value: "8080"         # Testing Port Mirror on Kubernetes
         - name: PROXY_PORT
-          value: "8080"
+          value: "8080"         # Testing Port Mirror on Kubernetes
         ports:
-          - containerPort: 8081 # Nginx
+          - containerPort: 8080 # Nginx
             protocol: TCP
         resources:
          requests:
-           memory: "256Mi"     # 256mb
-           cpu: "100m"         # .1 CPU
+           memory: "100M"       # 100 MB
+           cpu: "1m"            # .001 CPU (smallest unit possible)
          limits:               
-           memory: "256Mi"     # 156mb
-           cpu: "100m"         # .1 CPU
+           memory: "100M"       # 100 MB
+           cpu: "1m"            # .001 CPU

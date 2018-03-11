@@ -50,6 +50,7 @@ WORKDIR /go/src/NothingsBland.com/web
 RUN go build
 
 ENTRYPOINT [ "./web", "--config", "app.prod.yaml" ]
+
 # CMD ["nginx", "-g", "daemon off;"] #NGINX CMD
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 

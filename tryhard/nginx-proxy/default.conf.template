@@ -1,12 +1,12 @@
 
 server {
-    listen       SERVER_PORT;
-    server_name  SERVER_NAME;
+    listen          SERVER_PORT;
+    server_address  SERVER_ADDRESS;
 
     client_max_body_size 100M;
 
     location / {
-        proxy_pass http://$server_name:PROXY_PORT;
+        proxy_pass http://$server_address:PROXY_PORT;
     }
 
     error_page  404              /404.html;
@@ -20,3 +20,4 @@ server {
 
 # Notes
 # Using environment variables is tough in NGINX.
+# These "template" values will be replaced at docker instance runtime. (see Docker CMD)

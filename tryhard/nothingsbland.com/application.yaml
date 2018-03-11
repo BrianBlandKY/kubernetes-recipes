@@ -6,14 +6,6 @@ metadata:
 spec:
   selector:
     app: nothingsbland-app
-  type: NodePort
-  ports: 
-  - name: http-app 	# For testing, remove later
-    protocol: TCP
-    port: 8080
-    targetPort: 8080
-  externalIPs:
-  - 172.16.0.10 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,7 +24,7 @@ spec:
       labels:
         app: nothingsbland-app
     spec:
-      hostname: nothingsbland-app
+      hostname: nothingsbland-app 
       nodeSelector:
         kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
       containers:    
@@ -44,11 +36,11 @@ spec:
             protocol: TCP
         resources:
          requests:
-           memory: "256Mi"     # 256mb
-           cpu: "100m"         # .1 CPU
+           memory: "100M"      # 100 MB
+           cpu: "1m"           # .001 CPU (smallest unit possible)
          limits:               
-           memory: "256Mi"     # 256mb
-           cpu: "100m"         # .1 CPU
+           memory: "100M"      # 100 MB
+           cpu: "1m"           # .001 CPU (smallest unit possible)
         volumeMounts:
         - mountPath: /apps/nothingsbland/logs
           name: logs
