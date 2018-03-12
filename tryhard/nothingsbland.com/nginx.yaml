@@ -6,6 +6,12 @@ metadata:
 spec:
   selector:
     app: nginx-nothingsbland
+  #type: NodePort # Disabled
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -33,7 +39,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: PROXY_SERVICE_NAME
-          value: "app-nothingsbland"   # Service DNS Name
+          value: "app-nothingsbland.tryhard"   # Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP

@@ -6,6 +6,12 @@ metadata:
 spec:
   selector:
     app: app-nothingsbland
+  # type: NodePort # Disabled
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
