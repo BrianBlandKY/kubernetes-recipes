@@ -26,20 +26,17 @@ RUN make install
 # Copy over config
 COPY haproxy.cfg /etc/haproxy
 
+# Let's Encrypt Stuffs
+
+# ... 
+
+ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
+
+# Testing
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
-CMD ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 
 # Build
 # docker build -t haproxy-img:1.0.0 -f Dockerfile .
 
 # Run
-# docker run -tdi -p 8080:8080 --name nothingsbland nothingsbland-img
-# docker ruxn -tdi -p 8080:8080 -v /Users/bland/Development/Go/src/NothingsBland.com:/apps/nothingsbland --name nothingsbland nothingsbland-img
-
-
-# Install and Configure Let's Encrypt
-# Make this configurable for other installations: 
-# - nothignsbland.com
-# - quizzicaldad.com
-# - tryhard.me
-# Use base HAProxy CMD
+# docker run -tdi -p 80:80 -p 443:443 --name haproxy haproxy-img

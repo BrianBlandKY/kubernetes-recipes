@@ -12,9 +12,17 @@ RUN rm default.conf
 # Copy configuration template
 COPY default.conf.template .
 
+# Copy entrypoint script
+COPY entrypoint.sh .
+
+RUN chmod 700 entrypoint.sh
+
 # Using ENV variables we can dynamically set the nginx config at run-time
 # One image can be used for multiple applications
-CMD sh -c "sed 's/PROXY_SERVICE_NAME/$PROXY_SERVICE_NAME/g' default.conf.template >> default.conf && nginx -g 'daemon off;'"
+ENTRYPOINT ["./entrypoint.sh"]
+
+# Testing
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
 # docker build -t nginx-img:1.0.0 -f Dockerfile .
