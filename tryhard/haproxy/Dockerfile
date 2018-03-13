@@ -5,32 +5,94 @@ EXPOSE 80/tcp
 # HTTPS Port
 EXPOSE 443/tcp
 
+# Software Versions
+ENV SUPERVISOR_VERSION 3.3.4
+
+ENV LUA_VERSION 5.3.4
+ENV LUA_VERSION_SHORT 53
+
+ENV HAPROXY_MAJOR 1.8
+ENV HAPROXY_VERSION 1.8.4
+
+# System Updates
 RUN yum update -y && \
+    yum groups mark install "Development Tools" && \
+    yum groups mark convert "Development Tools" && \
+    yum groupinstall -y "Development Tools" && \
     yum install -y epel-release && \
-    yum install -y gcc pcre-static pcre-devel && \
-    yum install -y wget nano haproxy && \ 
-    yum group install "Development Tools" -y && \
+    yum install -y \
+        readline-devel \
+        ncurses-devel \
+        gcc gcc-c++ kernel-devel make \
+        openssl-devel \
+        pcre-static \
+        pcre-devel \
+        curl \
+        dnsmasq \
+        ca-certificates \
+        python-ndg-httpsclient \
+        wget \
+        nano \
+        haproxy \
+        cronie \
+        certbot \
+        python-setuptools && \ 
     yum clean all
 
-RUN mkdir -p /usr/local/src/haproxy
+# Supervisor Install
+RUN wget https://github.com/Supervisor/supervisor/archive/${SUPERVISOR_VERSION}.tar.gz \
+    && tar -xvf ${SUPERVISOR_VERSION}.tar.gz \
+    && cd supervisor-${SUPERVISOR_VERSION} && python setup.py install
 
-WORKDIR /usr/local/src/haproxy
+# Lua Install
+RUN cd /usr/src \
+    && curl -R -O http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz \
+    && tar zxf lua-${LUA_VERSION}.tar.gz \
+    && rm lua-${LUA_VERSION}.tar.gz \
+    && cd lua-${LUA_VERSION} \
+    && make linux \
+    && make INSTALL_TOP=/opt/lua${LUA_VERSION_SHORT} install
 
-RUN wget http://www.haproxy.org/download/1.8/src/haproxy-1.8.4.tar.gz -O haproxy.tar.gz
-RUN tar xzvf haproxy.tar.gz -C .
+# HAProxy Install
+RUN cd / \
+    && wget http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz -O haproxy.tar.gz \
+    && mkdir -p /usr/src/haproxy \
+	&& tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
+    && rm haproxy.tar.gz \
+    && make -C /usr/src/haproxy \
+        TARGET=linux2628 \
+        USE_PCRE=1 PCREDIR= \
+		USE_OPENSSL=1 \
+		USE_ZLIB=1 \
+		USE_LUA=yes LUA_LIB=/opt/lua53/lib/ \
+        LUA_INC=/opt/lua53/include/ LDFLAGS=-ldl \
+		all \
+		install-bin \
+        && mkdir -p /usr/local/etc/haproxy \
+	    && cp -R /usr/src/haproxy/examples/errorfiles /usr/local/etc/haproxy/errors \
+	    && rm -rf /usr/src/haproxy
 
-WORKDIR /usr/local/src/haproxy/haproxy-1.8.4
-RUN make TARGET=linux2628
-RUN make install
+# See https://github.com/janeczku/haproxy-acme-validation-plugin
+COPY acme/acme-http01-webroot.lua /usr/local/etc/haproxy
+COPY acme/cert-renewal-haproxy.sh /
+
+# Cron job for auto renewals
+COPY crontab.txt /var/crontab.txt
+RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
+
+COPY supervisord.conf /etc/supervisord.conf
+COPY certs.sh /
+COPY bootstrap.sh /
+
+# Used for ACME renewal
+RUN mkdir /jail && mkdir /etc/letsencrypt
 
 # Copy over config
-COPY haproxy.cfg /etc/haproxy
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-# Let's Encrypt Stuffs
+ENTRYPOINT ["/bootstrap.sh"]
 
-# ... 
-
-ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
+# ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 
 # Testing
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
@@ -40,3 +102,6 @@ ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 --name haproxy haproxy-img
+# docker run -tdi -p 80:80 -p 443:443 \
+# -e CERTS=my.domain,my.other.domain \
+# -e EMAIL=my.email@my.domain haproxy:1.0.0
