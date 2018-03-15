@@ -5,6 +5,9 @@ EXPOSE 80/tcp
 # HTTPS Port
 EXPOSE 443/tcp
 
+ENV CERTS 'nothingsbland.com, tryhard.tv'
+ENV EMAIL 'brianbland42@gmail.com'
+
 # Software Versions
 ENV SUPERVISOR_VERSION 3.3.4
 
