@@ -5,7 +5,7 @@ EXPOSE 80/tcp
 # HTTPS Port
 EXPOSE 443/tcp
 
-ENV CERTS nothingsbland.com,tryhard.tv
+ENV CERTS www.nothingsbland.com
 ENV EMAIL brianbland42@gmail.com
 
 # Software Versions
@@ -14,8 +14,11 @@ ENV SUPERVISOR_VERSION 3.3.4
 ENV LUA_VERSION 5.3.4
 ENV LUA_VERSION_SHORT 53
 
-ENV HAPROXY_MAJOR 1.8
-ENV HAPROXY_VERSION 1.8.4
+# ENV HAPROXY_MAJOR 1.8
+# ENV HAPROXY_VERSION 1.8.4
+
+ENV HAPROXY_MAJOR 1.7
+ENV HAPROXY_VERSION 1.7.2
 
 # System Updates
 RUN yum update -y && \
@@ -24,10 +27,12 @@ RUN yum update -y && \
     yum groupinstall -y "Development Tools" && \
     yum install -y epel-release && \
     yum install -y \
+        gcc gcc-c++ make \
         readline-devel \
-        ncurses-devel \
-        gcc gcc-c++ kernel-devel make \
         openssl-devel \
+        ncurses-devel \
+        glibc-devel  \
+        kernel-devel \
         pcre-static \
         pcre-devel \
         curl \
@@ -64,15 +69,15 @@ RUN cd / \
     && tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
     && rm haproxy.tar.gz \
     && make -C /usr/src/haproxy \
-                TARGET=linux2628 \
-                USE_PCRE=1 \
-                PCREDIR= \
+        TARGET=linux2628 \
+        USE_PCRE=1 \
+        PCREDIR= \
 		USE_OPENSSL=1 \
 		USE_ZLIB=1 \
 		USE_LUA=yes \
-                LUA_LIB=/opt/lua53/lib/ \
-                LUA_INC=/opt/lua53/include/ \
-                LDFLAGS=-ldl \
+        LUA_LIB=/opt/lua53/lib/ \
+        LUA_INC=/opt/lua53/include/ \
+        LDFLAGS=-ldl \
 		all \
 		install-bin \
     && mkdir -p /usr/local/etc/haproxy \
@@ -104,8 +109,7 @@ RUN mkdir /jail && mkdir /etc/letsencrypt
 # Copy over config
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-#ENTRYPOINT ["/bootstrap.sh"]
-
+# ENTRYPOINT ["/bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 
 # Testing
