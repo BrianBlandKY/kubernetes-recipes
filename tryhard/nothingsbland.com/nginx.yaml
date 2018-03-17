@@ -12,6 +12,8 @@ spec:
     protocol: TCP
     port: 8080
     targetPort: 8080
+  externalIPs:
+  - 172.16.0.10 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -109,17 +109,14 @@ RUN mkdir /jail && mkdir /etc/letsencrypt
 # Copy over config
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-ENTRYPOINT ["/bootstrap.sh"]
+# ENTRYPOINT "./bootstrap.sh"
+# CMD "./bootstrap.sh"
+# ENTRYPOINT ["./bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
-
-# Testing
-# ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
 # docker build -t haproxy-img:1.0.0 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 --name haproxy haproxy-img
-# docker run -tdi -p 80:80 -p 443:443 \
-# -e CERTS=my.domain,my.other.domain \
-# -e EMAIL=my.email@my.domain haproxy:1.0.0
