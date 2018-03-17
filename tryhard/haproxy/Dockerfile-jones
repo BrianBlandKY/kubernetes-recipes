@@ -1,5 +1,8 @@
 FROM bradjonesllc/docker-haproxy-letsencrypt
 
+ENV CERTS nothingsbland.com
+ENV EMAIL brianbland42@gmail.com
+
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 # For testing
