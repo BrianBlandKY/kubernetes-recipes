@@ -5,7 +5,7 @@ EXPOSE 80/tcp
 # HTTPS Port
 EXPOSE 443/tcp
 
-ENV CERTS nothingsbland.com
+ENV CERTS nothingsbland.com, tryhard.tv
 ENV EMAIL brianbland42@gmail.com
 
 # Software Versions
@@ -109,11 +109,11 @@ RUN mkdir /jail && mkdir /etc/letsencrypt
 # Copy over config
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-# ENTRYPOINT ["/bootstrap.sh"]
+ENTRYPOINT ["/bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 
 # Testing
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
 # docker build -t haproxy-img:1.0.0 -f Dockerfile .
