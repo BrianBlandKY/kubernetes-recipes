@@ -5,6 +5,8 @@ EXPOSE 80/tcp
 # HTTPS Port
 EXPOSE 443/tcp
 
+VOLUME /etc/letsencrypt
+
 ENV CERTS nothingsbland.com, tryhard.tv
 ENV EMAIL brianbland42@gmail.com
 
@@ -104,19 +106,19 @@ RUN chmod 700 /bootstrap.sh && \
     chmod 700 /docker-entrypoint.sh
 
 # Used for ACME renewal
-RUN mkdir /jail && mkdir /etc/letsencrypt
+RUN mkdir /jail
 
 # Copy over config
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-# ENTRYPOINT "./bootstrap.sh"
+ENTRYPOINT "./bootstrap.sh"       
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
 # docker build -t haproxy-img:1.0.0 -f Dockerfile .
 
 # Run
-# docker run -tdi -p 80:80 -p 443:443 --name haproxy haproxy-img
+# docker run -tdi -p 80:80 -p 443:443 -v /apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img

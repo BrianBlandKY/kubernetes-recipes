@@ -55,3 +55,11 @@ spec:
          limits:               
            memory: "100M"       # 100 MB
            cpu: "1m"            # .001 CPU
+        volumeMounts:
+        - mountPath: /etc/letsencrypt
+          name: letsencrypt
+      volumes:
+      - name: letsencrypt
+        hostPath:
+          path: /apps/letsencrypt  # directory location on host
+          type: Directory
