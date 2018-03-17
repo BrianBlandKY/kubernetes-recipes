@@ -5,7 +5,7 @@ EXPOSE 80/tcp
 # HTTPS Port
 EXPOSE 443/tcp
 
-ENV CERTS www.nothingsbland.com
+ENV CERTS nothingsbland.com
 ENV EMAIL brianbland42@gmail.com
 
 # Software Versions
