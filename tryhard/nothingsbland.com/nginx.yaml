@@ -10,7 +10,7 @@ spec:
   ports:
   - name: http
     protocol: TCP
-    port: 8080
+    port: 8081			# Internally 8081 will be assigned to nothingsbland-nginx. Useful for testing application.
     targetPort: 8080
   externalIPs:
   - 172.16.0.10 # Node IP Address
