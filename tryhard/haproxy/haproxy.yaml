@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: haproxy-tryhard
+  name: haproxy
   namespace: tryhard
 spec:
   selector:
-    app: haproxy-tryhard
+    app: haproxy
   type: NodePort          # This should be the only exposed ports on tryhard
   ports:                  # Everything should rely on internal kubernetes Service DNS resolutio
   - name: http
@@ -22,25 +22,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: haproxy-tryhard
+  name: haproxy
   namespace: tryhard
   labels:
-    app: haproxy-tryhard
+    app: haproxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: haproxy-tryhard
+      app: haproxy
   template:
     metadata:
       labels:
-        app: haproxy-tryhard
+        app: haproxy
     spec:
-      hostname: haproxy-tryhard
+      hostname: haproxy
       nodeSelector:
         kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
       containers:
-      - name: haproxy-tryhard
+      - name: haproxy
         image: haproxy-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-nothingsbland
+  name: app-nothingsbland-com
   namespace: tryhard
 spec:
   selector:
-    app: app-nothingsbland
+    app: app-nothingsbland-com
   # type: NodePort # Disabled
   ports:
   - name: http
@@ -16,25 +16,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-nothingsbland
+  name: app-nothingsbland-com
   namespace: tryhard
   labels:
-    app: app-nothingsbland
+    app: app-nothingsbland-com
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: app-nothingsbland
+      app: app-nothingsbland-com
   template:
     metadata:
       labels:
-        app: app-nothingsbland
+        app: app-nothingsbland-com
     spec:
-      hostname: app-nothingsbland
+      hostname: app-nothingsbland-com
       nodeSelector:
         kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
       containers:    
-      - name: app-nothingsbland	# NothingsBland App
+      - name: app-nothingsbland-com		# NothingsBland App
         image: nothingsbland-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:

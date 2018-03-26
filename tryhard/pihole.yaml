@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tryhard-pihole-service
+  name: pihole
   namespace: tryhard
 spec:
   selector:
-    app: tryhard-pihole
+    app: pihole
   type: NodePort
   ports: 
   - name: http
@@ -26,25 +26,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tryhard-pihole
+  name: pihole
   namespace: tryhard
   labels:
-    app: tryhard-pihole
+    app: pihole
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tryhard-pihole
+      app: pihole
   template:
     metadata:
       labels:
-        app: tryhard-pihole
+        app: pihole
     spec:
-      hostname: plex-tryhard
+      hostname: pihole
       nodeSelector:
         kubernetes.io/hostname: master-jim.tryhard # Only deploy to Master-Jim   
       containers:
-      - name: tryhard-pihole
+      - name: pihole
         image: diginc/pi-hole:debian_v3.2.1
         imagePullPolicy: IfNotPresent
         env:
@@ -65,8 +65,8 @@ spec:
           protocol: UDP
         resources:
           requests:
-            memory: "256Mi"     # 256mb
-            cpu: "200m"         # 1/5 CPU
+            memory: "100M"      # 100 MB
+            cpu: "100m"         # 1 CPU
           limits:               
-            memory: "384Mi"     # 384mb
-            cpu: "444m"         # 2.25/5 CPU
+            memory: "100M"      # 100 MB
+            cpu: "100m"         # 1 CPU

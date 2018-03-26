@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-nothingsbland
+  name: proxy-nothingsbland-com
   namespace: tryhard
 spec:
   selector:
-    app: nginx-nothingsbland
+    app: proxy-nothingsbland-com
   type: NodePort
   ports:
   - name: http
@@ -18,30 +18,30 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-nothingsbland
+  name: proxy-nothingsbland-com
   namespace: tryhard
   labels:
-    app: nginx-nothingsbland
+    app: proxy-nothingsbland-com
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nginx-nothingsbland
+      app: proxy-nothingsbland-com
   template:
     metadata:
       labels:
-        app: nginx-nothingsbland
+        app: proxy-nothingsbland-com
     spec:
-      hostname: nginx-nothingsbland
+      hostname: proxy-nothingsbland-com
       nodeSelector:
         kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
       containers:
-      - name: nginx-nothingsbland	# Nginx Proxy
+      - name: proxy-nothingsbland-com	# Nginx Proxy
         image: nginx-img:1.0.0
         imagePullPolicy: IfNotPresent
         env:
         - name: PROXY_SERVICE_NAME
-          value: "app-nothingsbland.tryhard"   # Service DNS Name
+          value: "app-nothingsbland-com.tryhard"   # Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP
