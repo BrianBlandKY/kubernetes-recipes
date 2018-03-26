@@ -65,8 +65,8 @@ spec:
           protocol: UDP
         resources:
           requests:
-            memory: "100M"      # 100 MB
-            cpu: "100m"         # 1 CPU
+            memory: "200M"      # 200 MB
+            cpu: "300m"         # 3 CPU
           limits:               
-            memory: "100M"      # 100 MB
-            cpu: "100m"         # 1 CPU
+            memory: "200M"      # 200 MB
+            cpu: "300m"         # 3 CPU
