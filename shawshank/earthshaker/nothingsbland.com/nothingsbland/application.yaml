@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-nothingsbland
-  namespace: tryhard
+  name: earthshaker-app-nothingsbland
+  namespace: shawshank
 spec:
   selector:
-    app: app-nothingsbland
+    app: earthshaker-app-nothingsbland
   # type: NodePort # Disabled
   ports:
   - name: http
@@ -16,25 +16,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-nothingsbland
-  namespace: tryhard
+  name: earthshaker-app-nothingsbland
+  namespace: shawshank
   labels:
-    app: app-nothingsbland
+    app: earthshaker-app-nothingsbland
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: app-nothingsbland
+      app: earthshaker-app-nothingsbland
   template:
     metadata:
       labels:
-        app: app-nothingsbland
+        app: earthshaker-app-nothingsbland
     spec:
-      hostname: app-nothingsbland
+      hostname: earthshaker-app-nothingsbland
       nodeSelector:
-        kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
+        kubernetes.io/hostname: earthshaker.shawshank  # Only deploy to Earthshaker Node    
       containers:    
-      - name: app-nothingsbland	# NothingsBland App
+      - name: earthshaker-app-nothingsbland	# NothingsBland App
         image: nothingsbland-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
@@ -48,10 +48,10 @@ spec:
            memory: "100M"      # 100 MB
            cpu: "1m"           # .001 CPU (smallest unit possible)
         volumeMounts:
-        - mountPath: /apps/nothingsbland/logs
+        - mountPath: /vault/apps/nothingsbland/logs
           name: logs
       volumes:
       - name: logs
         hostPath:
-          path: /apps/nothingsbland/logs
-          type: Directory
+          path: /vault/apps/nothingsbland/logs
+          type: DirectoryOrCreate

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: haproxy-tryhard
-  namespace: tryhard
+  name: earthshaker-haproxy
+  namespace: shawshank
 spec:
   selector:
-    app: haproxy-tryhard
-  type: NodePort          # This should be the only exposed ports on tryhard
-  ports:                  # Everything should rely on internal kubernetes Service DNS resolutio
+    app: earthshaker-haproxy
+  type: NodePort          
+  ports:                  # Everything should rely on internal kubernetes Service DNS resolution
   - name: http
     protocol: TCP
     port: 80
@@ -17,30 +17,30 @@ spec:
     port: 443
     targetPort: 443
   externalIPs:
-  - 172.16.0.10 # Node IP Address
+  - 10.0.0.50 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: haproxy-tryhard
-  namespace: tryhard
+  name: earthshaker-haproxy
+  namespace: shawshank
   labels:
-    app: haproxy-tryhard
+    app: earthshaker-haproxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: haproxy-tryhard
+      app: earthshaker-haproxy
   template:
     metadata:
       labels:
-        app: haproxy-tryhard
+        app: earthshaker-haproxy
     spec:
-      hostname: haproxy-tryhard
+      hostname: earthshaker-haproxy
       nodeSelector:
-        kubernetes.io/hostname: master-jim.tryhard  # Only deploy to master-jim Node    
+        kubernetes.io/hostname: earthshaker.shawshank  # Only deploy to Earthshaker Node    
       containers:
-      - name: haproxy-tryhard
+      - name: earthshaker-haproxy
         image: haproxy-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
@@ -61,5 +61,5 @@ spec:
       volumes:
       - name: letsencrypt
         hostPath:
-          path: /apps/letsencrypt  # directory location on host
-          type: Directory
+          path: /vault/apps/letsencrypt  # directory location on host
+          type: DirectoryOrCreate

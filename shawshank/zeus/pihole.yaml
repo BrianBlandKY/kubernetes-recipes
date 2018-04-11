@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: shawshank-pihole-service
+  name: zeus-pihole
   namespace: shawshank
 spec:
   selector:
-    app: shawshank-pihole
+    app: zeus-pihole
   type: NodePort
   ports: 
   - name: http
@@ -26,25 +26,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shawshank-pihole
+  name: zeus-pihole
   namespace: shawshank
   labels:
-    app: shawshank-pihole
+    app: zeus-pihole
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: shawshank-pihole
+      app: zeus-pihole
   template:
     metadata:
       labels:
-        app: shawshank-pihole
+        app: zeus-pihole
     spec:
-      hostname: plex-shawshank
+      hostname: zeus-pihole
       nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node    
+        kubernetes.io/hostname: zeus.shawshank # Only deploy to Zeus Node    
       containers:
-      - name: shawshank-pihole
+      - name: zeus-pihole
         image: diginc/pi-hole:debian_v3.2.1
         imagePullPolicy: IfNotPresent
         env:

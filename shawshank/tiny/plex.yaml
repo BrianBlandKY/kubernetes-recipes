@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: shawshank-plex-service
+  name: tiny-plex
   namespace: shawshank
 spec:
   selector:
-    app: shawshank-plex
+    app: tiny-plex
   ports: 
   - name: plex-tcp-3005
     protocol: TCP
@@ -44,37 +44,39 @@ spec:
     port: 32469
     targetPort: 32469    
   externalIPs:
-  - 10.0.0.10 # Node IP Address
+  - 10.0.0.20 # Node IP Address
+  - 10.0.0.21
+  - 10.0.0.22
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shawshank-plex
+  name: tiny-plex
   namespace: shawshank
   labels:
-    app: shawshank-plex
+    app: tiny-plex
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: shawshank-plex
+      app: tiny-plex
   template:
     metadata:
       labels:
-        app: shawshank-plex
+        app: tiny-plex
     spec:
-      hostname: plex-shawshank
+      hostname: tiny-plex
       nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
+        kubernetes.io/hostname: tiny.shawshank # Only deploy to Tiny Node
       containers:
-      - name: shawshank-plex
+      - name: axe-plex
         image: plexinc/pms-docker
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
           value: "America/New_York"
         - name: ADVERTISE_IP
-          value: "http://10.0.0.10:32400/"
+          value: "http://10.0.0.20:32400/"
         # Add Claim
         ports:
         - containerPort: 1900
@@ -97,11 +99,11 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "1028Mi"    # 1028 MB
-            cpu: "1000m"        # 1 CPU
+            memory: "5140Mi"    # 5140 MB (5 GB)
+            cpu: "2000m"        # 2 CPU
           limits:               
-            memory: "2048Mi"    # 2048 MB
-            cpu: "1250m"        # 1 1/4 CPU
+            memory: "6168Mi"    # 6168 MB (6 GB)
+            cpu: "2500m"        # 2 1/2 CPU
         volumeMounts:
         - mountPath: /data
           name: data
@@ -112,13 +114,13 @@ spec:
       volumes:
       - name: data
         hostPath:
-          path: /apps/samba/media  # directory location on host
-          type: Directory
+          path: /vault/samba/media     # directory location on host
+          type: DirectoryOrCreate
       - name: transcode
         hostPath:
-          path: /apps/plex/transcode  # directory location on host
-          type: Directory
+          path: /vault/plex/transcode  # directory location on host
+          type: DirectoryOrCreate
       - name: config
         hostPath:
-          path: /apps/plex/config  # directory location on host
-          type: Directory
+          path: /vault/plex/config     # directory location on host
+          type: DirectoryOrCreate

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: samba-service
+  name: axe-samba
   namespace: shawshank
 spec:
   selector:
-    app: samba
+    app: axe-samba
   type: NodePort
   ports: 
   - name: samba-tcp-139
@@ -17,33 +17,33 @@ spec:
     port: 445
     targetPort: 445
   externalIPs:
-  - 10.0.0.10 # Node IP Address
+  - 10.0.0.30 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: samba
+  name: axe-samba
   namespace: shawshank
   labels:
-    app: samba
+    app: axe-samba
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: samba
+      app: axe-samba
   template:
     metadata:
       labels:
-        app: samba
+        app: axe-samba
     spec:
-      hostname: samba-shawshank
+      hostname: axe-samba
       nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
+        kubernetes.io/hostname: axe.shawshank # Only deploy to Axe Node
       containers:
-      - name: samba
+      - name: axe-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Media"]
+        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Axe Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Axe Media"]
         ports:
         - containerPort: 139
           protocol: TCP

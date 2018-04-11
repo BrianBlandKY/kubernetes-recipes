@@ -3,7 +3,7 @@ FROM centos:centos7
 # Web Port
 EXPOSE 8080/tcp 
 
-VOLUME ["/apps/nothingsbland/logs"]
+VOLUME ["/vault/apps/nothingsbland/logs"]
 
 ENV GOPATH /go
 ENV GOBIN /go/bin
@@ -23,7 +23,7 @@ RUN wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
 # Make volume log directory
-RUN mkdir -p "/apps/nothingsbland/logs"
+RUN mkdir -p "/vault/apps/nothingsbland/logs"
 
 # Download NothingsBland.com Release v1.0.0
 RUN mkdir -p /go/src/NothingsBland.com

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: samba-service
+  name: tiny-samba
   namespace: shawshank
 spec:
   selector:
-    app: samba
+    app: tiny-samba
   type: NodePort
   ports: 
   - name: samba-tcp-139
@@ -17,33 +17,35 @@ spec:
     port: 445
     targetPort: 445
   externalIPs:
-  - 10.0.0.10 # Node IP Address
+  - 10.0.0.20 # Node IP Address
+  - 10.0.0.21
+  - 10.0.0.22
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: samba
+  name: tiny-samba
   namespace: shawshank
   labels:
-    app: samba
+    app: tiny-samba
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: samba
+      app: tiny-samba
   template:
     metadata:
       labels:
-        app: samba
+        app: tiny-samba
     spec:
-      hostname: samba-shawshank
+      hostname: tiny-samba
       nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
+        kubernetes.io/hostname: tiny.shawshank # Only deploy to Tiny Node
       containers:
-      - name: samba
+      - name: tiny-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Media"]
+        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Tiny Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Tiny Media"]
         ports:
         - containerPort: 139
           protocol: TCP

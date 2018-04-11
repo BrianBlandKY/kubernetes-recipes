@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: samba-service
+  name: juggernaut-samba
   namespace: shawshank
 spec:
   selector:
-    app: samba
+    app: juggernaut-samba
   type: NodePort
   ports: 
   - name: samba-tcp-139
@@ -17,33 +17,35 @@ spec:
     port: 445
     targetPort: 445
   externalIPs:
-  - 10.0.0.10 # Node IP Address
+  - 10.0.0.40 # Node IP Address
+  - 10.0.0.41
+  - 10.0.0.42
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: samba
+  name: juggernaut-samba
   namespace: shawshank
   labels:
-    app: samba
+    app: juggernaut-samba
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: samba
+      app: juggernaut-samba
   template:
     metadata:
       labels:
-        app: samba
+        app: juggernaut-samba
     spec:
-      hostname: samba-shawshank
+      hostname: juggernaut-samba
       nodeSelector:
-        kubernetes.io/hostname: warden.shawshank # Only deploy to Warden Node
+        kubernetes.io/hostname: juggernaut.shawshank # Only deploy to Juggernaut Node
       containers:
-      - name: samba
+      - name: juggernaut-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Media"]
+        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Juggernaut Vault"]
         ports:
         - containerPort: 139
           protocol: TCP
@@ -59,14 +61,8 @@ spec:
         volumeMounts:
         - mountPath: /apps/vault
           name: vault
-        - mountPath: /apps/media
-          name: media
       volumes:
       - name: vault
         hostPath:
           path: /vault/samba/vault  # directory location on host
-          type: DirectoryOrCreate
-      - name: media
-        hostPath:
-          path: /vault/samba/media  # directory location on host
           type: DirectoryOrCreate
