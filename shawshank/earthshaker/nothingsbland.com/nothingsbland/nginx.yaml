@@ -1,11 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
+<<<<<<< HEAD:shawshank/earthshaker/nothingsbland.com/nothingsbland/nginx.yaml
   name: earthshaker-nginx-nothingsbland
   namespace: shawshank
 spec:
   selector:
     app: earthshaker-nginx-nothingsbland
+=======
+  name: proxy-nothingsbland-com
+  namespace: tryhard
+spec:
+  selector:
+    app: proxy-nothingsbland-com
+>>>>>>> e56633674329aa09e2e472f8b7f88356cbe38e5a:tryhard/nothingsbland.com/nginx.yaml
   type: NodePort
   ports:
   - name: http
@@ -18,14 +26,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+<<<<<<< HEAD:shawshank/earthshaker/nothingsbland.com/nothingsbland/nginx.yaml
   name: earthshaker-nginx-nothingsbland
   namespace: shawshank
   labels:
     app: earthshaker-nginx-nothingsbland
+=======
+  name: proxy-nothingsbland-com
+  namespace: tryhard
+  labels:
+    app: proxy-nothingsbland-com
+>>>>>>> e56633674329aa09e2e472f8b7f88356cbe38e5a:tryhard/nothingsbland.com/nginx.yaml
 spec:
   replicas: 2
   selector:
     matchLabels:
+<<<<<<< HEAD:shawshank/earthshaker/nothingsbland.com/nothingsbland/nginx.yaml
       app: earthshaker-nginx-nothingsbland
   template:
     metadata:
@@ -33,15 +49,32 @@ spec:
         app: earthshaker-nginx-nothingsbland
     spec:
       hostname: earthshaker-nginx-nothingsbland
+=======
+      app: proxy-nothingsbland-com
+  template:
+    metadata:
+      labels:
+        app: proxy-nothingsbland-com
+    spec:
+      hostname: proxy-nothingsbland-com
+>>>>>>> e56633674329aa09e2e472f8b7f88356cbe38e5a:tryhard/nothingsbland.com/nginx.yaml
       nodeSelector:
         kubernetes.io/hostname: earthshaker.shawshank # Only deploy to Earthshaker Node    
       containers:
+<<<<<<< HEAD:shawshank/earthshaker/nothingsbland.com/nothingsbland/nginx.yaml
       - name: earthshaker-nginx-nothingsbland	# Nginx Proxy
+=======
+      - name: proxy-nothingsbland-com	# Nginx Proxy
+>>>>>>> e56633674329aa09e2e472f8b7f88356cbe38e5a:tryhard/nothingsbland.com/nginx.yaml
         image: nginx-img:1.0.0
         imagePullPolicy: IfNotPresent
         env:
         - name: PROXY_SERVICE_NAME
+<<<<<<< HEAD:shawshank/earthshaker/nothingsbland.com/nothingsbland/nginx.yaml
           value: "earthshaker-app-nothingsbland.shawshank"   # Service DNS Name
+=======
+          value: "app-nothingsbland-com.tryhard"   # Service DNS Name
+>>>>>>> e56633674329aa09e2e472f8b7f88356cbe38e5a:tryhard/nothingsbland.com/nginx.yaml
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP

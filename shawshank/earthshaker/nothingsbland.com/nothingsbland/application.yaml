@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: earthshaker-app-nothingsbland
+  name: earthshaker-app-nothingsbland-com
   namespace: shawshank
 spec:
   selector:
-    app: earthshaker-app-nothingsbland
+    app: earthshaker-app-nothingsbland-com
   # type: NodePort # Disabled
   ports:
   - name: http
@@ -16,7 +16,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: earthshaker-app-nothingsbland
+  name: earthshaker-app-nothingsbland-com
   namespace: shawshank
   labels:
     app: earthshaker-app-nothingsbland
@@ -24,17 +24,17 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: earthshaker-app-nothingsbland
+      app: earthshaker-app-nothingsbland-com
   template:
     metadata:
       labels:
-        app: earthshaker-app-nothingsbland
+        app: earthshaker-app-nothingsbland-com
     spec:
-      hostname: earthshaker-app-nothingsbland
+      hostname: earthshaker-app-nothingsbland-com
       nodeSelector:
         kubernetes.io/hostname: earthshaker.shawshank  # Only deploy to Earthshaker Node    
       containers:    
-      - name: earthshaker-app-nothingsbland	# NothingsBland App
+      - name: earthshaker-app-nothingsbland-com	# NothingsBland App
         image: nothingsbland-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
