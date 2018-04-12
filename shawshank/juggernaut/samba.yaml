@@ -17,7 +17,7 @@ spec:
     port: 445
     targetPort: 445
   externalIPs:
-  - 10.0.0.40 # Node IP Address
+  # For Testing - 10.0.0.40 # Juggernaut Node IP Address
   - 10.0.0.41
   - 10.0.0.42
 ---
@@ -40,12 +40,12 @@ spec:
     spec:
       hostname: juggernaut-samba
       nodeSelector:
-        kubernetes.io/hostname: juggernaut.shawshank # Only deploy to Juggernaut Node
+        kubernetes.io/hostname: juggernaut.shawshank # Only deploy to juggernaut Node
       containers:
       - name: juggernaut-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Juggernaut Vault"]
+        args: ["-r", "-S", "-s", "vault;/vault;yes;no;yes;all;none;[];Shawshank Juggernaut Vault"]
         ports:
         - containerPort: 139
           protocol: TCP
@@ -53,13 +53,13 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "1028Mi"    # 1028 MB (1 GB)
-            cpu: "500m"         # 1/2 CPU
+            memory: "8192Mi"    # 8192 MB (8 GB)
+            cpu: "2000m"        # 2 CPU
           limits:               
-            memory: "1542Mi"    # 1542 MB (1.5 GB)
-            cpu: "1000m"        # 1 CPU
+            memory: "9216Mi"    # 9216 MB (9 GB)
+            cpu: "2500m"        # 2.5 CPU
         volumeMounts:
-        - mountPath: /apps/vault
+        - mountPath: /vault
           name: vault
       volumes:
       - name: vault
