@@ -17,7 +17,7 @@ spec:
     port: 445
     targetPort: 445
   externalIPs:
-  - 10.0.0.20 # Node IP Address
+  - 10.0.0.20 # tiny.shawshank Node IP Address
   - 10.0.0.21
   - 10.0.0.22
 ---
@@ -40,12 +40,12 @@ spec:
     spec:
       hostname: tiny-samba
       nodeSelector:
-        kubernetes.io/hostname: tiny.shawshank # Only deploy to Tiny Node
+        kubernetes.io/hostname: tiny.shawshank # Only deploy to tiny Node
       containers:
       - name: tiny-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Tiny Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Tiny Media"]
+        args: ["-r", "-S", "-s", "vault;/vault;yes;no;yes;all;none;[];Shawshank Tiny Vault", "-s", "media;/media;yes;no;yes;all;none;[];Shawshank Tiny Media"]
         ports:
         - containerPort: 139
           protocol: TCP
@@ -59,9 +59,9 @@ spec:
             memory: "1542Mi"    # 1542 MB (1.5 GB)
             cpu: "1000m"        # 1 CPU
         volumeMounts:
-        - mountPath: /apps/vault
+        - mountPath: /vault
           name: vault
-        - mountPath: /apps/media
+        - mountPath: /media
           name: media
       volumes:
       - name: vault

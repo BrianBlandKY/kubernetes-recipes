@@ -44,7 +44,7 @@ spec:
     port: 32469
     targetPort: 32469    
   externalIPs:
-  - 10.0.0.20 # Node IP Address
+  - 10.0.0.20 # tiny.shawshank Node IP Address
   - 10.0.0.21
   - 10.0.0.22
 ---
@@ -65,18 +65,20 @@ spec:
       labels:
         app: tiny-plex
     spec:
-      hostname: tiny-plex
+      hostname: tiny-plex-shawshank
       nodeSelector:
-        kubernetes.io/hostname: tiny.shawshank # Only deploy to Tiny Node
+        kubernetes.io/hostname: tiny.shawshank # Only deploy to tiny Node
       containers:
-      - name: axe-plex
-        image: plexinc/pms-docker
+      - name: tiny-plex
+        image: plexinc/pms-docker:1.12.2.4929-29f6d1796
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
           value: "America/New_York"
         - name: ADVERTISE_IP
           value: "http://10.0.0.20:32400/"
+        #- name: ALLOWED_NETWORKS
+        #  value: "10.0.0.0/24,172.16.0.0/16"
         # Add Claim
         ports:
         - containerPort: 1900
