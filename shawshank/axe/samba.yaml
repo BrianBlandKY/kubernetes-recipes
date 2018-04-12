@@ -43,7 +43,7 @@ spec:
       - name: axe-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        args: ["-r", "-S", "-s", "vault;/apps/vault;yes;no;yes;all;none;[];Shawshank Axe Vault", "-s", "media;/apps/media;yes;no;yes;all;none;[];Shawshank Axe Media"]
+        args: ["-r", "-S", "-s", "vault;/vault;yes;no;yes;all;none;[];Shawshank Axe Vault", "-s", "media;/media;yes;no;yes;all;none;[];Shawshank Axe Media"]
         ports:
         - containerPort: 139
           protocol: TCP
@@ -57,9 +57,9 @@ spec:
             memory: "1542Mi"    # 1542 MB (1.5 GB)
             cpu: "1000m"        # 1 CPU
         volumeMounts:
-        - mountPath: /apps/vault
+        - mountPath: /vault
           name: vault
-        - mountPath: /apps/media
+        - mountPath: /media
           name: media
       volumes:
       - name: vault
