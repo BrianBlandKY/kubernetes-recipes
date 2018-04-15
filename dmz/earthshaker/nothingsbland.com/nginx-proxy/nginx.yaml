@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: earthshaker-nginx-nothingsbland-com
-  namespace: shawshank
+  namespace: dmz
 spec:
   selector:
     app: earthshaker-nginx-nothingsbland-com
@@ -19,7 +19,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: earthshaker-nginx-nothingsbland-com
-  namespace: shawshank
+  namespace: dmz
   labels:
     app: earthshaker-nginx-nothingsbland-com
 spec:
@@ -41,7 +41,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: PROXY_SERVICE_NAME
-          value: "earthshaker-app-nothingsbland-com.shawshank"   # Service DNS Name
+          value: "earthshaker-app-nothingsbland-com.dmz"   # Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP

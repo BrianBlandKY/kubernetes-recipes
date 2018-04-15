@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: earthshaker-haproxy
-  namespace: shawshank
+  namespace: dmz
 spec:
   selector:
     app: earthshaker-haproxy
@@ -23,7 +23,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: earthshaker-haproxy
-  namespace: shawshank
+  namespace: dmz
   labels:
     app: earthshaker-haproxy
 spec:
