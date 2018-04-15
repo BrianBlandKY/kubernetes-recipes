@@ -19,7 +19,7 @@ metadata:
   name: earthshaker-app-nothingsbland-com
   namespace: shawshank
   labels:
-    app: earthshaker-app-nothingsbland
+    app: earthshaker-app-nothingsbland-com
 spec:
   replicas: 2
   selector:
