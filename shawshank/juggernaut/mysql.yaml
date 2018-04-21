@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: juggernaut-mysql
+  namespace: shawshank
+spec:
+  selector:
+    app: juggernaut-mysql
+  type: NodePort
+  ports: 
+  - name: mysql-tcp-3306
+    protocol: TCP
+    port: 3306
+    targetPort: 3306
+  externalIPs:
+  - 10.0.0.40   # Juggernaut Node IP Address
+  # - 10.0.0.41 # Additional NICs not yet supported for Kubernetes
+  # - 10.0.0.42 # Additional NICs not yet supported for Kubernetes
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: juggernaut-mysql
+  namespace: shawshank
+  labels:
+    app: juggernaut-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: juggernaut-mysql
+  template:
+    metadata:
+      labels:
+        app: juggernaut-mysql
+    spec:
+      hostname: juggernaut-mysql
+      nodeSelector:
+        kubernetes.io/hostname: juggernaut.shawshank # Only deploy to juggernaut Node
+      containers:
+      - name: juggernaut-mysql
+        image: library/mysql:8
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        resources:
+          requests:
+            memory: "4096Mi"    # 4096 MB (4 GB)
+            cpu: "2000m"        # 2 CPU
+          limits:               
+            memory: "4608Mi"    # 4608 MB (4.5 GB)
+            cpu: "2500m"        # 2.5 CPU
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql
+      volumes:
+      - name: mysql
+        hostPath:
+          path: /vault/mysql  # directory location on host
+          type: Directory
