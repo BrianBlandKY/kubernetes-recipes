@@ -41,6 +41,9 @@ spec:
       - name: juggernaut-mysql
         image: library/mysql:8
         imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "inception"
         ports:
         - containerPort: 3306
           protocol: TCP
@@ -52,10 +55,16 @@ spec:
             memory: "4608Mi"    # 4608 MB (4.5 GB)
             cpu: "2500m"        # 2.5 CPU
         volumeMounts:
+        - mountPath: /etc/mysql/conf.d
+          name: config
         - mountPath: /var/lib/mysql
-          name: mysql
+          name: data
       volumes:
-      - name: mysql
+      - name: config
         hostPath:
-          path: /vault/mysql  # directory location on host
+          path: /vault/mysql/config		# host directory
+          type: Directory
+      - name: data
+        hostPath:
+          path: /vault/mysql/data  		# host directory
           type: Directory
