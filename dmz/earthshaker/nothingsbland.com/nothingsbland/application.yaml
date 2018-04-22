@@ -48,7 +48,7 @@ spec:
            memory: "100M"      # 100 MB
            cpu: "1m"           # .001 CPU (smallest unit possible)
         volumeMounts:
-        - mountPath: /vault/apps/nothingsbland/logs
+        - mountPath: /apps/nothingsbland/logs
           name: logs
       volumes:
       - name: logs

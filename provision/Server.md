@@ -116,6 +116,9 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documen
 
 # Untaint Master Node
 kubectl taint nodes --all node-role.kubernetes.io/master-
+
+# NOTE: Confirm kube-dns pods are running before doing anything else.
+# Otherwise everything will fail with cni errors
 ```
 
 ## Slave Node
@@ -128,8 +131,8 @@ kubeadm join 10.0.0.10:6443 --token MASTER_TOKEN
 Kubernetes Notes
 
 ``` sh
-systemctl status docker # Check docker service status
-systemctl status kubelet 	# Check kubelet service status
+systemctl status docker     # Check docker service status
+systemctl status kubelet    # Check kubelet service status
 ```
 
 View service logs
