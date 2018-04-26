@@ -109,16 +109,21 @@ RUN chmod 700 /bootstrap.sh && \
 RUN mkdir /jail
 
 # Copy over config
-COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+# COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-ENTRYPOINT "./bootstrap.sh"       
+COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
+
+ENTRYPOINT "./bootstrap.sh"
+
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.0 -f Dockerfile .
+# docker build -t haproxy-img:1.0.1 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
+
+# Need Troubleshooting Steps
