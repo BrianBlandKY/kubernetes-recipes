@@ -41,7 +41,7 @@ spec:
         kubernetes.io/hostname: earthshaker.shawshank  # Only deploy to Earthshaker Node    
       containers:
       - name: earthshaker-haproxy
-        image: haproxy-img:1.0.3
+        image: haproxy-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80

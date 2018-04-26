@@ -115,15 +115,22 @@ COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 # ENTRYPOINT "./bootstrap.sh"
 
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
-ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
+# ENTRYPOINT ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-db", "-W"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.3 -f Dockerfile .
+# docker build -t haproxy-img:1.0.0 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
+# docker run -tdi -p 80:80 --name haproxy haproxy-img:1.0.0
 
+
+# Remove untagged images
+# docker rmi $(docker images -a | grep "^<none>" | awk '{print $3}')
 # Need Troubleshooting Steps
