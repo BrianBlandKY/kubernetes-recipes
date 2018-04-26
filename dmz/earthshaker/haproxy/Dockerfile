@@ -7,7 +7,7 @@ EXPOSE 443/tcp
 
 VOLUME /etc/letsencrypt
 
-ENV CERTS nothingsbland.com, tryhard.tv
+ENV CERTS nothingsbland.com, www.nothingsbland.com, tryhard.tv, www.tryhard.tv
 ENV EMAIL brianbland42@gmail.com
 
 # Software Versions
@@ -111,12 +111,14 @@ RUN mkdir /jail
 # Copy over config
 # COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
+COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-# ENTRYPOINT "./bootstrap.sh"
+# HTTPS
+ENTRYPOINT "./bootstrap.sh"
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+# HTTP
+# ENTRYPOINT ["/docker-entrypoint.sh"]
+# CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
 
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
@@ -124,7 +126,7 @@ CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.0 -f Dockerfile .
+# docker build -t haproxy-img:1.0.1 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
