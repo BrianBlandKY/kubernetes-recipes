@@ -7,11 +7,11 @@ EXPOSE 443/tcp
 
 VOLUME /etc/letsencrypt
 
-ENV CERTS nothingsbland.com, www.nothingsbland.com, tryhard.tv, www.tryhard.tv
-ENV EMAIL brianbland42@gmail.com
+# ENV CERTS nothingsbland.com, www.nothingsbland.com, tryhard.tv, www.tryhard.tv
+# ENV EMAIL brianbland42@gmail.com
 
 # Software Versions
-ENV SUPERVISOR_VERSION 3.3.4
+# ENV SUPERVISOR_VERSION 3.3.4
 
 ENV LUA_VERSION 5.3.4
 ENV LUA_VERSION_SHORT 53
@@ -51,9 +51,9 @@ RUN yum update -y && \
     yum clean all
 
 # Supervisor Install
-RUN wget https://github.com/Supervisor/supervisor/archive/${SUPERVISOR_VERSION}.tar.gz \
-    && tar -xvf ${SUPERVISOR_VERSION}.tar.gz \
-    && cd supervisor-${SUPERVISOR_VERSION} && python setup.py install
+# RUN wget https://github.com/Supervisor/supervisor/archive/${SUPERVISOR_VERSION}.tar.gz \
+#     && tar -xvf ${SUPERVISOR_VERSION}.tar.gz \
+#     && cd supervisor-${SUPERVISOR_VERSION} && python setup.py install
 
 # Lua Install
 RUN cd /usr/src \
@@ -85,28 +85,17 @@ RUN cd / \
     && mkdir -p /usr/local/etc/haproxy \
     && cp -R /usr/src/haproxy/examples/errorfiles /usr/local/etc/haproxy/errors \
     && rm -rf /usr/src/haproxy
+# COPY docker-entrypoint.sh /
 
-# See https://github.com/janeczku/haproxy-acme-validation-plugin
-COPY acme/acme-http01-webroot.lua /usr/local/etc/haproxy
-COPY acme/cert-renewal-haproxy.sh /
+# Create CERTS
+# RUN certbot certonly --standalone -d nothingsbland..com -d www.nothingsbland.com \
+#     --non-interactive --agree-tos --email brianbland42@gmail.com \
+#     --http-01-port=8888
 
 # Cron job for auto renewals
 COPY crontab.txt /var/crontab.txt
+COPY update-certs.sh /opt/update-certs.sh
 RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
-
-COPY supervisord.conf /etc/supervisord.conf
-COPY certs.sh /
-COPY bootstrap.sh /
-COPY docker-entrypoint.sh /
-
-RUN chmod 700 /bootstrap.sh && \
-    chmod 700 /usr/local/etc/haproxy/acme-http01-webroot.lua && \
-    chmod 700 /cert-renewal-haproxy.sh && \
-    chmod 700 /certs.sh && \
-    chmod 700 /docker-entrypoint.sh
-
-# Used for ACME renewal
-RUN mkdir /jail
 
 # Copy over config
 # COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
@@ -114,7 +103,7 @@ RUN mkdir /jail
 COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 # HTTPS
-ENTRYPOINT "./bootstrap.sh"
+# ENTRYPOINT "./bootstrap.sh"
 
 # HTTP
 # ENTRYPOINT ["/docker-entrypoint.sh"]
@@ -123,7 +112,7 @@ ENTRYPOINT "./bootstrap.sh"
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-db", "-W"]
-# ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
 # docker build -t haproxy-img:1.0.2 -f Dockerfile .

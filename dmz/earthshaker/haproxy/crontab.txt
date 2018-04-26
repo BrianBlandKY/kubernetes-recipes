@@ -1,4 +1,1 @@
-MAILTO=""
-SHELL=/bin/bash
-
-5 8 * * 6 /cert-renewal-haproxy.sh
+0 0 1 * * root bash /opt/update-certs.sh
