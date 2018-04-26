@@ -113,11 +113,11 @@ RUN mkdir /jail
 
 COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-ENTRYPOINT "./bootstrap.sh"
+# ENTRYPOINT "./bootstrap.sh"
 
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
-# ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
+ENTRYPOINT ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db", "-W"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
