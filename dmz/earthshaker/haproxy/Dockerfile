@@ -121,7 +121,7 @@ ENTRYPOINT "./bootstrap.sh"
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.1 -f Dockerfile .
+# docker build -t haproxy-img:1.0.2 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
