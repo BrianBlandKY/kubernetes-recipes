@@ -106,19 +106,19 @@ COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 # ENTRYPOINT "./bootstrap.sh"
 
 # HTTP
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+# ENTRYPOINT ["/docker-entrypoint.sh"]
+# CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
 
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-db", "-W"]
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.5 -f Dockerfile .
+# docker build -t haproxy-img:1.0.7 -f Dockerfile .
 
 # Run
-# docker run -tdi -p 80:80 -p 443:443 -v /vault/apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
+# docker run -tdi -p 80:80 -p 443:443 -v /vault/apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img:1.0.5
 # docker run -tdi -p 80:80 --name haproxy haproxy-img:1.0.0
 
 
