@@ -100,11 +100,16 @@ COPY update-certs.sh /opt/update-certs.sh
 RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
 
 # Copy over config
-COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
+# COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-# HTTPS
-# ENTRYPOINT "./bootstrap.sh"
+COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
+# This assumes certs alreayd exists!
+RUN mkdir -p /etc/ssl/nothingsbland.com
+RUN cat /etc/letsencrypt/live/nothingsbland.com/fullchainpem \
+    /etc/letsencrypt/live/nothingsbland.com/privkey.pem \
+    | tee /etc/ssl/nothingsbland.com/nothingsbland.com.pem
+    
 # HTTP
 # ENTRYPOINT ["/docker-entrypoint.sh"]
 # CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
