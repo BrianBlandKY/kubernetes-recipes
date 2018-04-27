@@ -100,7 +100,7 @@ COPY update-certs.sh /opt/update-certs.sh
 RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
 
 # Copy over config
-COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
+COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 # HTTPS
 # ENTRYPOINT "./bootstrap.sh"
