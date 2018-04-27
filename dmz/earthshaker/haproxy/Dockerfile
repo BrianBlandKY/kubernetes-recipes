@@ -87,6 +87,7 @@ RUN cd / \
     && rm -rf /usr/src/haproxy
 
 COPY docker-entrypoint.sh /
+RUN chmod 775 /docker-entrypoint.sh
 
 # Create CERTS
 # RUN certbot certonly --standalone -d nothingsbland..com -d www.nothingsbland.com \
@@ -114,10 +115,10 @@ CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.4 -f Dockerfile .
+# docker build -t haproxy-img:1.0.5 -f Dockerfile .
 
 # Run
-# docker run -tdi -p 80:80 -p 443:443 -v /apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
+# docker run -tdi -p 80:80 -p 443:443 -v /vault/apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
 # docker run -tdi -p 80:80 --name haproxy haproxy-img:1.0.0
 
 
