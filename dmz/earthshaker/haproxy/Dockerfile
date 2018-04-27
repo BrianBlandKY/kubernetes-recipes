@@ -85,7 +85,8 @@ RUN cd / \
     && mkdir -p /usr/local/etc/haproxy \
     && cp -R /usr/src/haproxy/examples/errorfiles /usr/local/etc/haproxy/errors \
     && rm -rf /usr/src/haproxy
-# COPY docker-entrypoint.sh /
+
+COPY docker-entrypoint.sh /
 
 # Create CERTS
 # RUN certbot certonly --standalone -d nothingsbland..com -d www.nothingsbland.com \
@@ -98,24 +99,22 @@ COPY update-certs.sh /opt/update-certs.sh
 RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
 
 # Copy over config
-# COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
-
 COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 # HTTPS
 # ENTRYPOINT "./bootstrap.sh"
 
 # HTTP
-# ENTRYPOINT ["/docker-entrypoint.sh"]
-# CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
 
 # CMD "./bootstrap.sh"
 # ENTRYPOINT ["./bootstrap.sh"]
 # ENTRYPOINT ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-db", "-W"]
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.2 -f Dockerfile .
+# docker build -t haproxy-img:1.0.4 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img
