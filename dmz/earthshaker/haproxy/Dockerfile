@@ -15,17 +15,11 @@ ENV GOBIN /go/bin
 ENV PATH $PATH:/go/bin
 ENV PATH=$PATH:/usr/local/go/bin
 
-# Software Versions
-# ENV SUPERVISOR_VERSION 3.3.4
-
 ENV LUA_VERSION 5.3.4
 ENV LUA_VERSION_SHORT 53
 
-# ENV HAPROXY_MAJOR 1.8             # Lua doesn't work for 1.8
-# ENV HAPROXY_VERSION 1.8.4         # ...
-
-ENV HAPROXY_MAJOR 1.7
-ENV HAPROXY_VERSION 1.7.2
+ENV HAPROXY_MAJOR 1.8             
+ENV HAPROXY_VERSION 1.8.8
 
 # System Updates
 RUN yum update -y && \
@@ -55,11 +49,6 @@ RUN yum update -y && \
         python-setuptools && \ 
     yum clean all
 
-# Supervisor Install
-# RUN wget https://github.com/Supervisor/supervisor/archive/${SUPERVISOR_VERSION}.tar.gz \
-#     && tar -xvf ${SUPERVISOR_VERSION}.tar.gz \
-#     && cd supervisor-${SUPERVISOR_VERSION} && python setup.py install
-
 # Lua Install
 RUN cd /usr/src \
     && curl -R -O http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz \
@@ -67,7 +56,7 @@ RUN cd /usr/src \
     && rm lua-${LUA_VERSION}.tar.gz \
     && cd lua-${LUA_VERSION} \
     && make linux \
-    && make INSTALL_TOP=/opt/lua${LUA_VERSION_SHORT} install
+&& make INSTALL_TOP=/opt/lua${LUA_VERSION_SHORT} install
 
 # HAProxy Install
 RUN cd / \
@@ -96,25 +85,19 @@ WORKDIR /tmp
 RUN wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
-# Install Go Dep
-RUN go get -u github.com/golang/dep/cmd/dep
-
 COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 # Get into shawshank-haproxy directory
 RUN mkdir -p /go/src/shawshank-haproxy
 COPY shawshank-haproxy/entrypoint.go /go/src/shawshank-haproxy/entrypoint.go
 WORKDIR /go/src/shawshank-haproxy
-
-# Install Application Dependencies
-RUN dep ensure
 RUN go build
 
 # ENTRYPOINT ["./shawshank-haproxy"]
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.10 -f Dockerfile .
+# docker build -t haproxy-img:1.0.11 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /vault/apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img:1.0.5
