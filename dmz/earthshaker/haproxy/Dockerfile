@@ -10,6 +10,11 @@ VOLUME /etc/letsencrypt
 ENV CERTS nothingsbland.com, tryhard.tv
 ENV EMAIL brianbland42@gmail.com
 
+ENV GOPATH /go
+ENV GOBIN /go/bin
+ENV PATH $PATH:/go/bin
+ENV PATH=$PATH:/usr/local/go/bin
+
 # Software Versions
 # ENV SUPERVISOR_VERSION 3.3.4
 
@@ -97,9 +102,9 @@ RUN go get -u github.com/golang/dep/cmd/dep
 COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 # Get into shawshank-haproxy directory
-RUN mkdir -p /opt/shawshank-haproxy/
-COPY shawshank-haproxy/entrypoint.go /opt/shawshank-haproxy/entrypoint.go
-WORKDIR /opt/shawshank-haproxy
+RUN mkdir -p /go/src/shawshank-haproxy
+COPY shawshank-haproxy/entrypoint.go /go/src/shawshank-haproxy/entrypoint.go
+WORKDIR /go/src/shawshank-haproxy
 
 # Install Application Dependencies
 RUN dep ensure
