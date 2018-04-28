@@ -31,12 +31,9 @@ type entryPoint struct {
 func (ep *entryPoint) Execute() {
 	log.Printf("Starting Shawshank Custom System Provision... Verison: %v \r\n", version)
 
-	// TODO May need to merge certs before starting HAProxy
-	// TODO
-
 	log.Println("Starting HAProxy...")
 	// This will panic on failure (don't program for recovery, let process die)
-	ep.StartPreProxy() // HAProxy
+	go ep.StartProxy() // HAProxy
 
 	log.Println("Checking certs...")
 	for _, cert := range strings.Split(ep.certs, ",") {
@@ -60,8 +57,8 @@ func (ep *entryPoint) Execute() {
 	// Kill and restart haproxy
 }
 
-func (ep *entryPoint) StartPreProxy() {
-	cmd := exec.Command("haproxy", "-f", "/usr/local/etc/haproxy/haproxy.http.cfg", "-D")
+func (ep *entryPoint) StartProxy() {
+	cmd := exec.Command("haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg")
 
 	// cmd.Stdin
 
@@ -77,6 +74,7 @@ func (ep *entryPoint) StartPreProxy() {
 		log.Printf("Err: %q \r\n", stdErr.String())
 		log.Fatalf("Out: %q \r\n", stdOut.String())
 	}
+	cmd.Wait()
 	// May need a way to hold on to this process and kill/restart on cert renewal
 }
 
@@ -141,7 +139,7 @@ func (ep *entryPoint) MergeCert(cert string) {
 		// Merge fullchain.pem and privkey.pem into one file
 		privkeyFile := fmt.Sprintf("%v/privkey.pem", externalDir)
 		fullchainFile := fmt.Sprintf("%v/fullchain.pem", externalDir)
-		fullcertFilename := fmt.Sprintf("%v/%v.pem", internalSSLDirectory, cert)
+		fullcertFilename := fmt.Sprintf("%v/%v/%v.pem", internalSSLDirectory, cert, cert)
 		ep.MergeFiles(fullcertFilename, fullchainFile, privkeyFile)
 	} else {
 		log.Panicf("Unable to find certs for %v", cert)
