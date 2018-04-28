@@ -31,12 +31,14 @@ type entryPoint struct {
 func (ep *entryPoint) Execute() {
 	log.Printf("Starting Shawshank Custom System Provision... Verison: %v \r\n", version)
 
+	// TODO May need to merge certs before starting HAProxy
+	// TODO
+
 	log.Println("Starting HAProxy...")
 	// This will panic on failure (don't program for recovery, let process die)
-	ep.StartProxy() // HAProxy
+	ep.StartPreProxy() // HAProxy
 
 	log.Println("Checking certs...")
-
 	for _, cert := range strings.Split(ep.certs, ",") {
 		cert = strings.TrimSpace(cert)
 
@@ -58,8 +60,8 @@ func (ep *entryPoint) Execute() {
 	// Kill and restart haproxy
 }
 
-func (ep *entryPoint) StartProxy() {
-	cmd := exec.Command("haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-D")
+func (ep *entryPoint) StartPreProxy() {
+	cmd := exec.Command("haproxy", "-f", "/usr/local/etc/haproxy/haproxy.http.cfg", "-D")
 
 	// cmd.Stdin
 
