@@ -7,4 +7,5 @@ certbot renew --force-renewal --tls-sni-01-port=8888
 bash -c "cat /etc/letsencrypt/live/demo.scalinglaravel.com/fullchain.pem /etc/letsencrypt/live/demo.scalinglaravel.com/privkey.pem > /etc/ssl/demo.scalinglaravel.com/demo.scalinglaravel.com.pem"
 
 # Reload  HAProxy
+# TODO Does this work on our container
 service haproxy reload

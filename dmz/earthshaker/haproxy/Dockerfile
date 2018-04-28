@@ -7,8 +7,8 @@ EXPOSE 443/tcp
 
 VOLUME /etc/letsencrypt
 
-# ENV CERTS nothingsbland.com, www.nothingsbland.com, tryhard.tv, www.tryhard.tv
-# ENV EMAIL brianbland42@gmail.com
+ENV CERTS nothingsbland.com, tryhard.tv
+ENV EMAIL brianbland42@gmail.com
 
 # Software Versions
 # ENV SUPERVISOR_VERSION 3.3.4
@@ -86,41 +86,30 @@ RUN cd / \
     && cp -R /usr/src/haproxy/examples/errorfiles /usr/local/etc/haproxy/errors \
     && rm -rf /usr/src/haproxy
 
-COPY docker-entrypoint.sh /
-RUN chmod 775 /docker-entrypoint.sh
+# Install Go
+WORKDIR /tmp
+RUN wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
-# Create CERTS
-# RUN certbot certonly --standalone -d nothingsbland..com -d www.nothingsbland.com \
-#     --non-interactive --agree-tos --email brianbland42@gmail.com \
-#     --http-01-port=8888
-
-# Cron job for auto renewals
-COPY crontab.txt /var/crontab.txt
-COPY update-certs.sh /opt/update-certs.sh
-RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
-
-# Copy over config
-# COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.cfg
+# Install Go Dep
+RUN go get -u github.com/golang/dep/cmd/dep
 
 COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-# This assumes certs alreayd exists!
-RUN mkdir -p /etc/ssl/nothingsbland.com
-RUN cat /etc/letsencrypt/live/nothingsbland.com/fullchainpem \
-    /etc/letsencrypt/live/nothingsbland.com/privkey.pem \
-    | tee /etc/ssl/nothingsbland.com/nothingsbland.com.pem
-    
-# HTTP
-# ENTRYPOINT ["/docker-entrypoint.sh"]
-# CMD ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+# Get into shawshank-haproxy directory
+RUN mkdir -p /opt/shawshank-haproxy/
+COPY shawshank-haproxy/entrypoint.go /opt/shawshank-haproxy/entrypoint.go
+WORKDIR /opt/shawshank-haproxy
 
-# CMD "./bootstrap.sh"
-# ENTRYPOINT ["./bootstrap.sh"]
-# ENTRYPOINT ["haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-db", "-W"]
+# Install Application Dependencies
+RUN dep ensure
+RUN go build
+
+# ENTRYPOINT ["./shawshank-haproxy"]
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.7 -f Dockerfile .
+# docker build -t haproxy-img:1.0.10 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /vault/apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img:1.0.5
