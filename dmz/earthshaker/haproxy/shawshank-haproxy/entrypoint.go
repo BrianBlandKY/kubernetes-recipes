@@ -94,6 +94,8 @@ func (ep *entryPoint) StartProxy(config string) {
 
 func (ep *entryPoint) ExistingCerts(url string) (exists bool, path string) {
 	externalDir := fmt.Sprintf("%v/%v", externalSSLDirectory, url)
+	// /etc/letsencrypt/live/url/url.pem
+	// TODO Under what conditions does certbot attach -####
 	if _, err := os.Stat(externalDir); err == nil {
 		return true, externalDir
 	}
