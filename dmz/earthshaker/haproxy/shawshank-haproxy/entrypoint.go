@@ -58,6 +58,8 @@ func (ep *entryPoint) Execute() {
 	log.Println("Starting HTTPS HAProxy...")
 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg")
 
+	log.Println("Shawshank Proxy Service Running...")
+
 	// TODO Renewal Process Loop
 	for {
 		// Idle
@@ -76,19 +78,22 @@ func (ep *entryPoint) StartProxy(config string) {
 	var stdErr bytes.Buffer
 	cmd.Stderr = &stdErr
 
+	go func() {
+		for {
+			select {
+			case _ = <-ep.httpProxyChan:
+				// Stop Haproxy
+				ep.httpProxyCounter++
+				cmd.Process.Kill()
+			}
+		}
+	}()
+
 	err := cmd.Run()
 	if err != nil {
 		log.Printf("Error starting Haproxy! %v", err)
 		log.Printf("Err: %q \r\n", stdErr.String())
-		log.Fatalf("Out: %q \r\n", stdOut.String())
-	}
-	for {
-		select {
-		case _ = <-ep.httpProxyChan:
-			// Stop Haproxy
-			ep.httpProxyCounter++
-			cmd.Process.Kill()
-		}
+		log.Printf("Out: %q \r\n", stdOut.String())
 	}
 }
 
