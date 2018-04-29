@@ -65,7 +65,7 @@ func (ep *entryPoint) StartProxy(config string) {
 	var stdErr bytes.Buffer
 	cmd.Stderr = &stdErr
 
-	err := cmd.Run()
+	err := cmd.Start()
 	if err != nil {
 		log.Printf("Error starting Haproxy! %v", err)
 		log.Printf("Err: %q \r\n", stdErr.String())
