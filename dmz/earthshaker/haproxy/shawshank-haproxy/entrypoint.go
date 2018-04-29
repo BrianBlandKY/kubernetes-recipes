@@ -14,22 +14,11 @@ const version = "0.1.0"
 const internalSSLDirectory = "/etc/ssl"
 const externalSSLDirectory = "/etc/letsencrypt/live/"
 
-/*
-
-	Two Goals:
-		Spin up Haproxy instance
-		Iterate over certs and create/initialize if needed
-		// Instead of cron job, maybe we can use this process to trigger
-		// cert update.
-*/
-
 type entryPoint struct {
-	certs             string
-	email             string
-	httpProxyChan     chan int
-	httpProxyCounter  int
-	httpsProxyChan    chan int
-	httpsProxyCounter int
+	certs        string
+	email        string
+	proxyChan    chan int
+	proxyCounter int
 }
 
 func (ep *entryPoint) Execute() {
@@ -52,8 +41,7 @@ func (ep *entryPoint) Execute() {
 
 	log.Println("Certificate Initialization Process Complete!")
 
-	log.Println("Stopping HTTP HAProxy...")
-	ep.httpProxyChan <- 1 // Stop HTTP HAProxy
+	ep.proxyChan <- 1 // Stop Proxy
 
 	log.Println("Starting HTTPS HAProxy...")
 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg")
@@ -64,7 +52,6 @@ func (ep *entryPoint) Execute() {
 	for {
 		// Idle
 	}
-	// Start renewal process
 }
 
 func (ep *entryPoint) StartProxy(config string) {
@@ -78,22 +65,27 @@ func (ep *entryPoint) StartProxy(config string) {
 	var stdErr bytes.Buffer
 	cmd.Stderr = &stdErr
 
-	go func() {
-		for {
-			select {
-			case _ = <-ep.httpProxyChan:
-				// Stop Haproxy
-				ep.httpProxyCounter++
-				cmd.Process.Kill()
-			}
-		}
-	}()
-
 	err := cmd.Run()
 	if err != nil {
 		log.Printf("Error starting Haproxy! %v", err)
 		log.Printf("Err: %q \r\n", stdErr.String())
-		log.Printf("Out: %q \r\n", stdOut.String())
+		log.Panicf("Out: %q \r\n", stdOut.String())
+	}
+
+	go func(cmd2 *exec.Cmd) {
+		for {
+			select {
+			case _ = <-ep.proxyChan:
+				// Stop Haproxy
+				ep.proxyCounter++
+				cmd2.Process.Kill()
+			}
+		}
+	}(cmd)
+
+	err = cmd.Wait()
+	if err != nil {
+		log.Printf("Stopped proxy... %v", err)
 	}
 }
 
@@ -169,12 +161,10 @@ func (ep *entryPoint) MergeCert(cert string) {
 
 func main() {
 	ep := &entryPoint{
-		certs:             os.Getenv("CERTS"),
-		email:             os.Getenv("EMAIL"),
-		httpProxyCounter:  0,
-		httpsProxyCounter: 0,
-		httpProxyChan:     make(chan int),
-		httpsProxyChan:    make(chan int),
+		certs:        os.Getenv("CERTS"),
+		email:        os.Getenv("EMAIL"),
+		proxyCounter: 0,
+		proxyChan:    make(chan int),
 	}
 	ep.Execute()
 }
