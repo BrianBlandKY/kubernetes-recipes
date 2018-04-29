@@ -8,9 +8,10 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
-const version = "0.1.0"
+const version = "0.2.0"
 const internalSSLDirectory = "/etc/ssl"
 const externalSSLDirectory = "/etc/letsencrypt/live/"
 
@@ -22,22 +23,13 @@ type entryPoint struct {
 }
 
 func (ep *entryPoint) Execute() {
-	log.Printf("Starting Shawshank Custom System Provision... Verison: %v \r\n", version)
+	log.Printf("Starting Shawshank Proxy Daemon... Verison: %v \r\n", version)
 
 	log.Println("Starting HTTP HAProxy...")
 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.http.cfg")
 
 	log.Println("Checking certs...")
-	for _, cert := range strings.Split(ep.certs, ",") {
-		cert = strings.TrimSpace(cert)
-
-		if exists, _ := ep.ExistingCerts(cert); !exists {
-			log.Printf("Building cert %v ...\n", cert)
-			ep.BuildCert(cert, ep.email)
-		}
-		log.Printf("Merging cert %v ...\n", cert)
-		ep.MergeCert(cert)
-	}
+	ep.ReviewCerts()
 
 	log.Println("Certificate Initialization Process Complete!")
 
@@ -48,9 +40,19 @@ func (ep *entryPoint) Execute() {
 
 	log.Println("Shawshank Proxy Service Running...")
 
-	// TODO Renewal Process Loop
-	for {
-		// Idle
+	// ticker every 20 days
+	ticker := time.NewTicker(time.Hour * 480)
+	for _ = range ticker.C {
+		log.Println("Renewing Certs (forced)...")
+		// Renew CERT
+		ep.RenewCerts()
+
+		// Restart HAProxy
+		log.Println("Stopped Proxy...")
+		ep.proxyChan <- 1 // Stop Proxy
+
+		log.Println("Starting HTTPS HAProxy...")
+		go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg")
 	}
 }
 
@@ -156,6 +158,50 @@ func (ep *entryPoint) MergeCert(cert string) {
 		ep.MergeFiles(fullcertFilename, fullchainFile, privkeyFile)
 	} else {
 		log.Panicf("Unable to find certs for %v", cert)
+	}
+}
+
+func (ep *entryPoint) ReviewCerts() {
+	for _, cert := range strings.Split(ep.certs, ",") {
+		cert = strings.TrimSpace(cert)
+
+		if exists, _ := ep.ExistingCerts(cert); !exists {
+			log.Printf("Building cert %v ...\n", cert)
+			ep.BuildCert(cert, ep.email)
+		}
+		log.Printf("Merging cert %v ...\n", cert)
+		ep.MergeCert(cert)
+	}
+}
+
+func (ep *entryPoint) RenewCerts() {
+	cmd := exec.Command("certbot", "renew", "--force-renewal", "--tls-sni-01-port=8888")
+
+	// cmd.Stdin
+
+	var stdOut bytes.Buffer
+	cmd.Stdout = &stdOut
+
+	var stdErr bytes.Buffer
+	cmd.Stderr = &stdErr
+
+	err := cmd.Run()
+	if err != nil {
+		log.Printf("Error renewing CERTS! %v", err)
+		log.Printf("Err: %q \r\n", stdErr.String())
+		log.Panicf("Out: %q \r\n", stdOut.String())
+	}
+
+	// For each cert we need to merge
+	for _, cert := range strings.Split(ep.certs, ",") {
+		cert = strings.TrimSpace(cert)
+
+		if exists, _ := ep.ExistingCerts(cert); !exists {
+			log.Printf("Building cert %v ...\n", cert)
+			ep.BuildCert(cert, ep.email)
+		}
+		log.Printf("Merging cert %v ...\n", cert)
+		ep.MergeCert(cert)
 	}
 }
 

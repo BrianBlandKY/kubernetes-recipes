@@ -98,7 +98,7 @@ ENTRYPOINT ["./shawshank-haproxy"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t haproxy-img:1.0.2 -f Dockerfile .
+# docker build -t haproxy-img:1.1.0 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 80:80 -p 443:443 -v /vault/apps/letsencrypt:/etc/letsencrypt --name haproxy haproxy-img:1.0.5
