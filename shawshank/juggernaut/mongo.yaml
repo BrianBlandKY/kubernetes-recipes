@@ -1,17 +1,25 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: juggernaut-mysql
+  name: juggernaut-mongo
   namespace: shawshank
 spec:
   selector:
-    app: juggernaut-mysql
+    app: juggernaut-mongo
   type: NodePort
   ports: 
-  - name: mysql-tcp-3306
+  - name: mongo-tcp-27017
     protocol: TCP
-    port: 3306
-    targetPort: 3306
+    port: 27017
+    targetPort: 27017
+  - name: mongo-tcp-27018
+    protocol: TCP
+    port: 27018
+    targetPort: 27018
+  - name: mongo-tcp-27019
+    protocol: TCP
+    port: 27019
+    targetPort: 27019        
   externalIPs:
   - 10.0.0.40   # Juggernaut Node IP Address
   # - 10.0.0.41 # Additional NICs not yet supported for Kubernetes
@@ -20,51 +28,51 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: juggernaut-mysql
+  name: juggernaut-mongo
   namespace: shawshank
   labels:
-    app: juggernaut-mysql
+    app: juggernaut-mongo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: juggernaut-mysql
+      app: juggernaut-mongo
   template:
     metadata:
       labels:
-        app: juggernaut-mysql
+        app: juggernaut-mongo
     spec:
-      hostname: juggernaut-mysql
+      hostname: juggernaut-mongo
       nodeSelector:
         kubernetes.io/hostname: juggernaut.shawshank # Only deploy to juggernaut Node
       containers:
-      - name: juggernaut-mysql
-        image: library/mysql:8
+      - name: juggernaut-mongo
+        image: library/mongo:3.7.9
         imagePullPolicy: IfNotPresent
         env:
-        - name: MYSQL_ROOT_PASSWORD
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: inception
+        - name: MONGO_INITDB_ROOT_PASSWORD
           value: inception
         ports:
-        - containerPort: 3306
+        - containerPort: 27017
           protocol: TCP
+        - containerPort: 27018
+          protocol: TCP
+        - containerPort: 27019
+          protocol: TCP                    
         resources:
           requests:
-            memory: 2048Mi    # 2048 MB (2 GB)
-            cpu: 2000m        # 2 CPU
+            memory: 2048Mi   # 2048 MB (2 GB)
+            cpu: 2000m       # 2 CPU
           limits:               
             memory: 2048Mi    # 2048 MB (2 GB)
             cpu: 2500m        # 2.5 CPU
         volumeMounts:
-        - mountPath: /etc/mysql/conf.d
-          name: config
-        - mountPath: /var/lib/mysql
+        - mountPath: /data/db
           name: data
       volumes:
-      - name: config
-        hostPath:
-          path: /vault/mysql/config		# host directory
-          type: Directory
       - name: data
         hostPath:
-          path: /vault/mysql/data  		# host directory
+          path: /vault/mongo/data  		# host directory
           type: Directory
