@@ -53,11 +53,11 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "8192Mi"    # 8192 MB (8 GB)
-            cpu: "2000m"        # 2 CPU
+            memory: 2048Mi    # 2048 MB (2 GB)
+            cpu: 500m         # .5 CPU
           limits:               
-            memory: "9216Mi"    # 9216 MB (9 GB)
-            cpu: "2500m"        # 2.5 CPU
+            memory: 2048Mi    # 2048 MB (2 GB)
+            cpu: 750m         # .75 CPU
         volumeMounts:
         - mountPath: /vault
           name: vault

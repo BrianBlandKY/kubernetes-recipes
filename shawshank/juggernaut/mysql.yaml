@@ -50,10 +50,10 @@ spec:
         resources:
           requests:
             memory: 2048Mi    # 2048 MB (2 GB)
-            cpu: 2000m        # 2 CPU
+            cpu: 1000m        # 1 CPU
           limits:               
             memory: 2048Mi    # 2048 MB (2 GB)
-            cpu: 2500m        # 2.5 CPU
+            cpu: 1000m        # 1 CPU
         volumeMounts:
         - mountPath: /etc/mysql/conf.d
           name: config
