@@ -4,6 +4,9 @@
 - No Swap, not compatible with Kubernetes
 - All storage drives (at install) are LVM/XFS and mounted to /vault
 
+## Add user to sudo
+``` usermod -aG wheel username ```
+
 ## Static IP Configuration (Example)
 
 ``` vi
