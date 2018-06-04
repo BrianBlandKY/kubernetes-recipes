@@ -64,5 +64,5 @@ spec:
       volumes:
       - name: vault
         hostPath:
-          path: /vault/samba/vault  # directory location on host
+          path: /vault/samba  # directory location on host
           type: DirectoryOrCreate
