@@ -86,6 +86,9 @@ cat << EOF > /etc/docker/daemon.json
 }
 EOF
 
+# Restart Docker
+systemctl restart docker
+
 # Install Kubernetes
 yum install -y kubelet kubeadm kubectl
 
