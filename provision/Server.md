@@ -86,9 +86,6 @@ cat << EOF > /etc/docker/daemon.json
 }
 EOF
 
-# Restart Docker
-systemctl restart docker
-
 # Install Kubernetes
 yum install -y kubelet kubeadm kubectl
 
@@ -100,7 +97,7 @@ sysctl --system
 systemctl stop firewalld && systemctl disable firewalld
 
 # Restart Services
-systemctl enable docker && systemctl start docker
+systemctl enable docker && systemctl restart docker
 systemctl enable kubelet && systemctl start kubelet
 ```
 
@@ -130,8 +127,12 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 ## Slave Node
 
 ``` sh
-# Join Master
-kubeadm join 10.0.0.10:6443 --token MASTER_TOKEN
+# From Master
+kubeadm token generate
+kubeadm token create <generated-token> --print-join-command --ttl=0
+
+# From Node
+# Apply statement from above
 ```
 
 Kubernetes Notes
