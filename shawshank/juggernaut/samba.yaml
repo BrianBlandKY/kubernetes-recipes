@@ -17,9 +17,7 @@ spec:
     port: 445
     targetPort: 445
   externalIPs:
-  - 10.0.0.40 # Juggernaut Node IP Address
-  # - 10.0.0.41
-  # - 10.0.0.42
+  - 10.0.0.30 # Juggernaut Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
