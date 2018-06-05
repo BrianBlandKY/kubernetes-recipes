@@ -5,7 +5,7 @@
 - All storage drives (at install) are LVM/XFS and mounted to /vault
 
 ## Add user to sudo
-``` usermod -aG wheel username ```
+``` gpasswd wheel -a bland ```
 
 ## Static IP Configuration (Example)
 
