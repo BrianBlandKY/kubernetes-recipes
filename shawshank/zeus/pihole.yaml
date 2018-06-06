@@ -45,7 +45,7 @@ spec:
         kubernetes.io/hostname: zeus.shawshank # Only deploy to Zeus Node    
       containers:
       - name: zeus-pihole
-        image: diginc/pi-hole:debian_v3.2.1
+        image: diginc/pi-hole:debian_v3.3.1
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
