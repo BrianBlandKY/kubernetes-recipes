@@ -5,7 +5,13 @@
 - All storage drives (at install) are LVM/XFS and mounted to /vault
 
 ## Add user to sudo
-``` gpasswd wheel -a bland ```
+``` 
+gpasswd wheel -a username
+
+visudo
+- Enable `%wheel  ALL=(ALL)       NOPASSWD: ALL`
+
+```
 
 ## Static IP Configuration (Example)
 
