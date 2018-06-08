@@ -100,8 +100,8 @@ yum install -y kubelet kubeadm kubectl
 # Add net.bridge.bridge-nf-call-iptables = 1
 sudo sysctl -p
 
--sysctl net.bridge.bridge-nf-call-iptables=1
--sysctl --system
+sysctl net.bridge.bridge-nf-call-iptables=1
+sysctl --system
 
 # Stop and Disable Firewall
 systemctl stop firewalld && systemctl disable firewalld
