@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: juggernaut-mongo
+  name: earthshaker-mongo
   namespace: shawshank
 spec:
   selector:
-    app: juggernaut-mongo
+    app: earthshaker-mongo
   type: NodePort
   ports: 
   - name: mongo-tcp-27017
@@ -21,32 +21,30 @@ spec:
     port: 27019
     targetPort: 27019        
   externalIPs:
-  - 10.0.0.40   # Juggernaut Node IP Address
-  # - 10.0.0.41 # Additional NICs not yet supported for Kubernetes
-  # - 10.0.0.42 # Additional NICs not yet supported for Kubernetes
+  - 10.0.0.20   # earthshaker Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: juggernaut-mongo
+  name: earthshaker-mongo
   namespace: shawshank
   labels:
-    app: juggernaut-mongo
+    app: earthshaker-mongo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: juggernaut-mongo
+      app: earthshaker-mongo
   template:
     metadata:
       labels:
-        app: juggernaut-mongo
+        app: earthshaker-mongo
     spec:
-      hostname: juggernaut-mongo
+      hostname: earthshaker-mongo
       nodeSelector:
-        kubernetes.io/hostname: juggernaut.shawshank # Only deploy to juggernaut Node
+        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to earthshaker Node
       containers:
-      - name: juggernaut-mongo
+      - name: earthshaker-mongo
         image: library/mongo:3.7.9
         imagePullPolicy: IfNotPresent
         env:
@@ -75,4 +73,4 @@ spec:
       - name: data
         hostPath:
           path: /vault/mongo/data  		# host directory
-          type: Directory
+          type: DirectoryOrCreate

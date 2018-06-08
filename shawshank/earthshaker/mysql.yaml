@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: juggernaut-mysql
+  name: earthshaker-mysql
   namespace: shawshank
 spec:
   selector:
-    app: juggernaut-mysql
+    app: earthshaker-mysql
   type: NodePort
   ports: 
   - name: mysql-tcp-3306
@@ -13,32 +13,30 @@ spec:
     port: 3306
     targetPort: 3306
   externalIPs:
-  - 10.0.0.40   # Juggernaut Node IP Address
-  # - 10.0.0.41 # Additional NICs not yet supported for Kubernetes
-  # - 10.0.0.42 # Additional NICs not yet supported for Kubernetes
+  - 10.0.0.20   # earthshaker Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: juggernaut-mysql
+  name: earthshaker-mysql
   namespace: shawshank
   labels:
-    app: juggernaut-mysql
+    app: earthshaker-mysql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: juggernaut-mysql
+      app: earthshaker-mysql
   template:
     metadata:
       labels:
-        app: juggernaut-mysql
+        app: earthshaker-mysql
     spec:
-      hostname: juggernaut-mysql
+      hostname: earthshaker-mysql
       nodeSelector:
-        kubernetes.io/hostname: juggernaut.shawshank # Only deploy to juggernaut Node
+        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to earthshaker Node
       containers:
-      - name: juggernaut-mysql
+      - name: earthshaker-mysql
         image: library/mysql:8
         imagePullPolicy: IfNotPresent
         env:
@@ -63,8 +61,8 @@ spec:
       - name: config
         hostPath:
           path: /vault/mysql/config		# host directory
-          type: Directory
+          type: DirectoryOrCreate
       - name: data
         hostPath:
           path: /vault/mysql/data  		# host directory
-          type: Directory
+          type: DirectoryOrCreate

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: earthshaker-haproxy
+  name: axe-haproxy
   namespace: dmz
 spec:
   selector:
-    app: earthshaker-haproxy
+    app: axe-haproxy
   type: NodePort          
   ports:                  # Everything should rely on internal kubernetes Service DNS resolution
   - name: http
@@ -17,30 +17,30 @@ spec:
     port: 443
     targetPort: 443
   externalIPs:
-  - 10.0.0.50 # Node IP Address
+  - 10.0.0.40 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: earthshaker-haproxy
+  name: axe-haproxy
   namespace: dmz
   labels:
-    app: earthshaker-haproxy
+    app: axe-haproxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: earthshaker-haproxy
+      app: axe-haproxy
   template:
     metadata:
       labels:
-        app: earthshaker-haproxy
+        app: axe-haproxy
     spec:
-      hostname: earthshaker-haproxy
+      hostname: axe-haproxy
       nodeSelector:
-        kubernetes.io/hostname: earthshaker.shawshank  # Only deploy to Earthshaker Node    
+        kubernetes.io/hostname: axe.dmz  # Only deploy to axe Node    
       containers:
-      - name: earthshaker-haproxy
+      - name: axe-haproxy
         image: haproxy-img:1.1.0
         imagePullPolicy: IfNotPresent
         ports:

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: axe-samba
-  namespace: shawshank
+  name: tiny-samba
+  namespace: dmz
 spec:
   selector:
-    app: axe-samba
+    app: tiny-samba
   type: NodePort
   ports: 
   - name: samba-tcp-139
@@ -17,33 +17,33 @@ spec:
     port: 445
     targetPort: 445
   externalIPs:
-  - 10.0.0.30 # Node IP Address
+  - 10.0.0.50 # tiny.dmz Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: axe-samba
-  namespace: shawshank
+  name: tiny-samba
+  namespace: dmz
   labels:
-    app: axe-samba
+    app: tiny-samba
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: axe-samba
+      app: tiny-samba
   template:
     metadata:
       labels:
-        app: axe-samba
+        app: tiny-samba
     spec:
-      hostname: axe-samba
+      hostname: tiny-samba
       nodeSelector:
-        kubernetes.io/hostname: axe.shawshank # Only deploy to Axe Node
+        kubernetes.io/hostname: tiny.dmz # Only deploy to tiny Node
       containers:
-      - name: axe-samba
+      - name: tiny-samba
         image: dperson/samba
         imagePullPolicy: IfNotPresent
-        args: ["-r", "-S", "-s", "media;/media;yes;no;yes;all;none;[];Shawshank Axe Media"]
+        args: ["-r", "-S", "-s", "media;/media;yes;no;yes;all;none;[];dmz Tiny Media"]
         ports:
         - containerPort: 139
           protocol: TCP

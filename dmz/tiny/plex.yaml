@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: tiny-plex
-  namespace: shawshank
+  namespace: dmz
 spec:
   selector:
     app: tiny-plex
@@ -44,15 +44,13 @@ spec:
     port: 32469
     targetPort: 32469    
   externalIPs:
-  - 10.0.0.20 # tiny.shawshank Node IP Address
-  # - 10.0.0.21
-  # - 10.0.0.22
+  - 10.0.0.50 # tiny.dmz Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tiny-plex
-  namespace: shawshank
+  namespace: dmz
   labels:
     app: tiny-plex
 spec:
@@ -65,9 +63,9 @@ spec:
       labels:
         app: tiny-plex
     spec:
-      hostname: tiny-plex-shawshank
+      hostname: tiny-plex-dmz
       nodeSelector:
-        kubernetes.io/hostname: tiny.shawshank # Only deploy to tiny Node
+        kubernetes.io/hostname: tiny.dmz # Only deploy to tiny Node
       containers:
       - name: tiny-plex
         image: plexinc/pms-docker:1.12.2.4929-29f6d1796

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: earthshaker-nginx-nothingsbland-com
+  name: axe-nginx-nothingsbland-com
   namespace: dmz
 spec:
   selector:
-    app: earthshaker-nginx-nothingsbland-com
+    app: axe-nginx-nothingsbland-com
   type: NodePort
   ports:
   - name: http
@@ -13,35 +13,35 @@ spec:
     port: 8081			# Internally 8081 will be assigned to nothingsbland-nginx. Useful for testing application.
     targetPort: 8080
   externalIPs:
-  - 10.0.0.50 # Node IP Address
+  - 10.0.0.40 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: earthshaker-nginx-nothingsbland-com
+  name: axe-nginx-nothingsbland-com
   namespace: dmz
   labels:
-    app: earthshaker-nginx-nothingsbland-com
+    app: axe-nginx-nothingsbland-com
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: earthshaker-nginx-nothingsbland-com
+      app: axe-nginx-nothingsbland-com
   template:
     metadata:
       labels:
-        app: earthshaker-nginx-nothingsbland-com
+        app: axe-nginx-nothingsbland-com
     spec:
-      hostname: earthshaker-nginx-nothingsbland-com
+      hostname: axe-nginx-nothingsbland-com
       nodeSelector:
-        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to Earthshaker Node    
+        kubernetes.io/hostname: axe.dmz # Only deploy to axe Node    
       containers:
-      - name: earthshaker-nginx-nothingsbland-com	# Nginx Proxy
+      - name: axe-nginx-nothingsbland-com	# Nginx Proxy
         image: nginx-img:1.0.0
         imagePullPolicy: IfNotPresent
         env:
         - name: PROXY_SERVICE_NAME
-          value: "earthshaker-app-nothingsbland-com.dmz"   # Service DNS Name
+          value: "axe-app-nothingsbland-com.dmz"   # Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP
