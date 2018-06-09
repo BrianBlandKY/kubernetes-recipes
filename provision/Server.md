@@ -115,7 +115,7 @@ systemctl enable kubelet && systemctl start kubelet
 
 ``` sh
 # Create Master Node
-kubeadm init —pod-network-cidr=10.244.0.0/16
+kubeadm init --pod-network-cidr=10.244.0.0/16
 
 # Save Token
 
