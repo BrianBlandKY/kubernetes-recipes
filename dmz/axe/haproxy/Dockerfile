@@ -26,7 +26,6 @@ RUN yum update -y && \
     yum groups mark install "Development Tools" && \
     yum groups mark convert "Development Tools" && \
     yum groupinstall -y "Development Tools" && \
-    yum install -y epel-release && \
     yum install -y \
         gcc gcc-c++ make \
         readline-devel \
@@ -48,6 +47,10 @@ RUN yum update -y && \
         certbot \
         python-setuptools && \ 
     yum clean all
+
+# EPEL
+RUN cd /tmp && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum install -y /tmp/epel-release-latest-*.noarch.rpm
 
 # Lua Install
 RUN cd /usr/src \

@@ -12,13 +12,17 @@ ENV PATH=$PATH:/usr/local/go/bin
 ENV container=docker
 
 # General Updates and Installs
-RUN yum install -y epel-release && \
-    yum update -y && \
+#RUN yum install -y epel-release && \
+RUN yum update -y && \
     yum install -y wget git nano && \
     yum clean all
 
-# Go 1.9.2
+# EPEL
 WORKDIR /tmp
+RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum install -y ./epel-release-latest-*.noarch.rpm
+
+# Go 1.9.2
 RUN wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
@@ -59,7 +63,7 @@ ENTRYPOINT [ "./web", "--config", "app.prod.yaml" ]
 
 # Run
 # docker run -tdi -p 8080:8080 --name nothingsbland nothingsbland-img
-# docker ruxn -tdi -p 8080:8080 -v /Users/bland/Development/Go/src/NothingsBland.com:/apps/nothingsbland --name nothingsbland nothingsbland-img
+# docker run -tdi -p 8080:8080 -v /Users/bland/Development/Go/src/NothingsBland.com:/apps/nothingsbland --name nothingsbland nothingsbland-img
 
 # Exec
 # docker exec -ti nothingsbland sh -c "go run main.go"

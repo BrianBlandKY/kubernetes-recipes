@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: axe-app-nothingsbland-com
+  name: app-nothingsbland
   namespace: dmz
 spec:
   selector:
-    app: axe-app-nothingsbland-com
-  # type: NodePort # Disabled
+    app: app-nothingsbland
   ports:
   - name: http
     protocol: TCP
@@ -16,25 +15,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: axe-app-nothingsbland-com
+  name: app-nothingsbland
   namespace: dmz
-  labels:
-    app: axe-app-nothingsbland-com
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: axe-app-nothingsbland-com
+      app: app-nothingsbland
   template:
     metadata:
       labels:
-        app: axe-app-nothingsbland-com
+        app: app-nothingsbland
     spec:
-      hostname: axe-app-nothingsbland-com
+      hostname: app-nothingsbland
       nodeSelector:
-        kubernetes.io/hostname: axe.dmz  # Only deploy to axe Node    
+        kubernetes.io/hostname: axe.dmz  	# Only deploy to axe Node    
       containers:    
-      - name: axe-app-nothingsbland-com	# NothingsBland App
+      - name: app-nothingsbland			# NothingsBland App
         image: nothingsbland-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:

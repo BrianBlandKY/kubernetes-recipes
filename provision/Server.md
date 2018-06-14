@@ -88,7 +88,8 @@ systemctl enable docker && systemctl start docker
 # Ensure Docker compatibility
 cat << EOF > /etc/docker/daemon.json
 {
-  "exec-opts": ["native.cgroupdriver=systemd"]
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "iptables":false
 }
 EOF
 

@@ -1,47 +1,50 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: axe-nginx-nothingsbland-com
+  name: nginx-nothingsbland
   namespace: dmz
+  labels:
+    app: nginx-nothingsbland
 spec:
   selector:
-    app: axe-nginx-nothingsbland-com
+    app: nginx-nothingsbland
   type: NodePort
   ports:
   - name: http
     protocol: TCP
-    port: 8081			# Internally 8081 will be assigned to nothingsbland-nginx. Useful for testing application.
+    port: 8081
     targetPort: 8080
   externalIPs:
-  - 10.0.0.40 # Node IP Address
+  - 10.0.0.40	# Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: axe-nginx-nothingsbland-com
+  name: nginx-nothingsbland
   namespace: dmz
   labels:
-    app: axe-nginx-nothingsbland-com
+    app: nginx-nothingsbland
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: axe-nginx-nothingsbland-com
+      app: nginx-nothingsbland
   template:
     metadata:
       labels:
-        app: axe-nginx-nothingsbland-com
+        app: nginx-nothingsbland
     spec:
-      hostname: axe-nginx-nothingsbland-com
+      hostname: nginx-nothingsbland
       nodeSelector:
-        kubernetes.io/hostname: axe.dmz # Only deploy to axe Node    
+        kubernetes.io/hostname: axe.dmz 	# Only deploy to axe Node    
       containers:
-      - name: axe-nginx-nothingsbland-com	# Nginx Proxy
-        image: nginx-img:1.0.0
+      - name: nginx-nothingsbland		# Nginx Proxy
+        image: nginx-img:1.0.3
         imagePullPolicy: IfNotPresent
         env:
-        - name: PROXY_SERVICE_NAME
-          value: "axe-app-nothingsbland-com.dmz"   # Service DNS Name
+        - name: PROXY_SERVICE_NAME		# Kubernetes Service Discovery?
+          value: 10.97.42.169
+          #value: app-nothingsbland	   	# Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP

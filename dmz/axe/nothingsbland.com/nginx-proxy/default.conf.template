@@ -1,7 +1,9 @@
-
 server {
     listen          8080;
     server_name     _;
+    
+    #error_log	logs/error.log debug;
+    #access_log	logs/access.log main;
 
     client_max_body_size 100M;
 
