@@ -39,12 +39,12 @@ spec:
         kubernetes.io/hostname: axe.dmz 	# Only deploy to axe Node    
       containers:
       - name: nginx-nothingsbland		# Nginx Proxy
-        image: nginx-img:1.0.3
+        image: nothingsbland-nginx:1.0.0
         imagePullPolicy: IfNotPresent
         env:
         - name: PROXY_SERVICE_NAME		# Kubernetes Service Discovery?
-          value: 10.97.42.169
-          #value: app-nothingsbland	   	# Service DNS Name
+          #value: 10.97.42.169
+          value: app-nothingsbland	   	# Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP

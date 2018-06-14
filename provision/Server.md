@@ -99,10 +99,6 @@ yum install -y kubelet kubeadm kubectl
 # IPTables Fix
 # Edit /etc/sysctl.conf
 # Add net.bridge.bridge-nf-call-iptables = 1
-sudo sysctl -p
-
-sysctl net.bridge.bridge-nf-call-iptables=1
-sysctl --system
 
 # Stop and Disable Firewall
 systemctl stop firewalld && systemctl disable firewalld
@@ -110,6 +106,8 @@ systemctl stop firewalld && systemctl disable firewalld
 # Restart Services
 systemctl enable docker && systemctl restart docker
 systemctl enable kubelet && systemctl start kubelet
+
+reboot
 ```
 
 ## Master Node
