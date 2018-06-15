@@ -21,13 +21,8 @@ ENV LUA_VERSION_SHORT 53
 ENV HAPROXY_MAJOR 1.8             
 ENV HAPROXY_VERSION 1.8.8
 
-# Remove Base Repo (random issue)
-# RUN mv /etc/yum.repos.d/CentOS-Base.repo /tmp
-
 RUN cat /etc/yum.repos.d/CentOS-Base.repo
 RUN cat /etc/resolv.conf
-
-#RUN ping https://www.google.com
 
 # System Updates
 RUN yum update -y && \
@@ -57,21 +52,23 @@ RUN yum update -y && \
     yum clean all
 
 # EPEL
-RUN cd /tmp && wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+WORKDIR /tmp
+RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN yum install -y /tmp/epel-release-latest-*.noarch.rpm
 
 # Lua Install
-RUN cd /usr/src \
-    && curl -R -O https://github.com/lua/lua/archive/v${LUA_VERSION}.tar.gz \
-    && tar zxf v${LUA_VERSION}.tar.gz \
+WORKDIR /usr/src
+COPY lua-${LUA_VERSION}.tar.gz .
+
+RUN tar zxf v${LUA_VERSION}.tar.gz \
     && rm v${LUA_VERSION}.tar.gz \
     && cd v${LUA_VERSION} \
     && make linux \
 && make INSTALL_TOP=/opt/v${LUA_VERSION_SHORT} install
 
 # HAProxy Install
-RUN cd / \
-    && wget http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz -O haproxy.tar.gz \
+WORKDIR /
+RUN wget http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz -O haproxy.tar.gz \
     && mkdir -p /usr/src/haproxy \
     && tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
     && rm haproxy.tar.gz \
@@ -99,13 +96,13 @@ RUN wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz && \
 COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.https.cfg
 COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.http.cfg
 
-# Get into shawshank-haproxy directory
-RUN mkdir -p /go/src/shawshank-haproxy
-COPY shawshank-haproxy/entrypoint.go /go/src/shawshank-haproxy/entrypoint.go
-WORKDIR /go/src/shawshank-haproxy
+# Get into dmz-haproxy directory
+RUN mkdir -p /go/src/dmz-haproxy
+COPY dmz-haproxy/entrypoint.go /go/src/dmz-haproxy/entrypoint.go
+WORKDIR /go/src/dmz-haproxy
 RUN go build
 
-ENTRYPOINT ["./shawshank-haproxy"]
+ENTRYPOINT ["./dmz-haproxy"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
