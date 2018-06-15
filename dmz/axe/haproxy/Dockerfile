@@ -15,11 +15,19 @@ ENV GOBIN /go/bin
 ENV PATH $PATH:/go/bin
 ENV PATH=$PATH:/usr/local/go/bin
 
-ENV LUA_VERSION 5.3.4
+ENV LUA_VERSION 5-3-4
 ENV LUA_VERSION_SHORT 53
 
 ENV HAPROXY_MAJOR 1.8             
 ENV HAPROXY_VERSION 1.8.8
+
+# Remove Base Repo (random issue)
+# RUN mv /etc/yum.repos.d/CentOS-Base.repo /tmp
+
+RUN cat /etc/yum.repos.d/CentOS-Base.repo
+RUN cat /etc/resolv.conf
+
+#RUN ping https://www.google.com
 
 # System Updates
 RUN yum update -y && \
@@ -54,12 +62,12 @@ RUN yum install -y /tmp/epel-release-latest-*.noarch.rpm
 
 # Lua Install
 RUN cd /usr/src \
-    && curl -R -O http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz \
-    && tar zxf lua-${LUA_VERSION}.tar.gz \
-    && rm lua-${LUA_VERSION}.tar.gz \
-    && cd lua-${LUA_VERSION} \
+    && curl -R -O https://github.com/lua/lua/archive/v${LUA_VERSION}.tar.gz \
+    && tar zxf v${LUA_VERSION}.tar.gz \
+    && rm v${LUA_VERSION}.tar.gz \
+    && cd v${LUA_VERSION} \
     && make linux \
-&& make INSTALL_TOP=/opt/lua${LUA_VERSION_SHORT} install
+&& make INSTALL_TOP=/opt/v${LUA_VERSION_SHORT} install
 
 # HAProxy Install
 RUN cd / \
