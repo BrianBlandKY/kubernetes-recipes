@@ -15,16 +15,33 @@ ENV GOBIN /go/bin
 ENV PATH $PATH:/go/bin
 ENV PATH=$PATH:/usr/local/go/bin
 
-ENV LUA_VERSION 5-3-4
-ENV LUA_VERSION_SHORT 53
-
 ENV HAPROXY_MAJOR 1.8             
 ENV HAPROXY_VERSION 1.8.8
 
-RUN cat /etc/yum.repos.d/CentOS-Base.repo
-RUN cat /etc/resolv.conf
+# System Updates
+RUN yum update -y && \
+    yum install -y \
+        curl \
+	which \
+        wget \
+	nano
+# EPEL
+#WORKDIR /tmp
+#RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+#RUN yum install -y /tmp/epel-release-latest-*.noarch.rpm
+RUN yum install -y epel-release
 
 # System Updates
+RUN yum install -y \
+        dnsmasq \
+        ca-certificates \
+        python-ndg-httpsclient \
+	haproxy \
+        cronie \
+        certbot \
+        python-setuptools
+
+# Development Tools
 RUN yum update -y && \
     yum groups mark install "Development Tools" && \
     yum groups mark convert "Development Tools" && \
@@ -37,34 +54,8 @@ RUN yum update -y && \
         glibc-devel  \
         kernel-devel \
         pcre-static \
-        pcre-devel \
-        curl \
-        which \
-        dnsmasq \
-        ca-certificates \
-        python-ndg-httpsclient \
-        wget \
-        nano \
-        haproxy \
-        cronie \
-        certbot \
-        python-setuptools && \ 
+        pcre-devel \ 
     yum clean all
-
-# EPEL
-WORKDIR /tmp
-RUN wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-RUN yum install -y /tmp/epel-release-latest-*.noarch.rpm
-
-# Lua Install
-WORKDIR /usr/src
-COPY lua-${LUA_VERSION}.tar.gz .
-
-RUN tar zxf v${LUA_VERSION}.tar.gz \
-    && rm v${LUA_VERSION}.tar.gz \
-    && cd v${LUA_VERSION} \
-    && make linux \
-&& make INSTALL_TOP=/opt/v${LUA_VERSION_SHORT} install
 
 # HAProxy Install
 WORKDIR /
@@ -78,9 +69,6 @@ RUN wget http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_
         PCREDIR= \
 		USE_OPENSSL=1 \
 		USE_ZLIB=1 \
-		USE_LUA=yes \
-        LUA_LIB=/opt/lua53/lib/ \
-        LUA_INC=/opt/lua53/include/ \
         LDFLAGS=-ldl \
 		all \
 		install-bin \
@@ -103,7 +91,7 @@ WORKDIR /go/src/dmz-haproxy
 RUN go build
 
 ENTRYPOINT ["./dmz-haproxy"]
-# ENTRYPOINT ["tail", "-f", "/dev/null"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
 # docker build -t haproxy-img:1.1.0 -f Dockerfile .
