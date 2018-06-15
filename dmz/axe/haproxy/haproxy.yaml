@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: axe-haproxy
+  name: haproxy-dmz
   namespace: dmz
 spec:
   selector:
-    app: axe-haproxy
+    app: haproxy-dmz
   type: NodePort          
   ports:                  # Everything should rely on internal kubernetes Service DNS resolution
   - name: http
@@ -22,25 +22,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: axe-haproxy
+  name: haproxy-dmz
   namespace: dmz
   labels:
-    app: axe-haproxy
+    app: haproxy-dmz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: axe-haproxy
+      app: haproxy-dmz
   template:
     metadata:
       labels:
-        app: axe-haproxy
+        app: haproxy-dmz
     spec:
-      hostname: axe-haproxy
+      hostname: haproxy-dmz
       nodeSelector:
         kubernetes.io/hostname: axe.dmz  # Only deploy to axe Node    
       containers:
-      - name: axe-haproxy
+      - name: haproxy-dmz
         image: haproxy-img:1.1.0
         imagePullPolicy: IfNotPresent
         ports:

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tiny-plex
+  name: plex
   namespace: dmz
 spec:
   selector:
-    app: tiny-plex
+    app: plex
   ports: 
   - name: plex-tcp-3005
     protocol: TCP
@@ -49,32 +49,32 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tiny-plex
+  name: plex
   namespace: dmz
   labels:
-    app: tiny-plex
+    app: plex
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tiny-plex
+      app: plex
   template:
     metadata:
       labels:
-        app: tiny-plex
+        app: plex
     spec:
-      hostname: tiny-plex-dmz
+      hostname: plex-dmz
       nodeSelector:
         kubernetes.io/hostname: tiny.dmz # Only deploy to tiny Node
       containers:
-      - name: tiny-plex
-        image: plexinc/pms-docker:1.12.2.4929-29f6d1796
+      - name: plex
+        image: plexinc/pms-docker:1.13.2.5154-fd05be322
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
           value: "America/New_York"
         - name: ADVERTISE_IP
-          value: "http://10.0.0.20:32400/"
+          value: "http://10.0.0.50:32400/"
         #- name: ALLOWED_NETWORKS
         #  value: "10.0.0.0/24,172.16.0.0/16"
         # Add Claim
@@ -100,10 +100,10 @@ spec:
         resources:
           requests:
             memory: "5140Mi"    # 5140 MB (5 GB)
-            cpu: "2000m"        # 2 CPU
+            cpu: "2500m"        # 2 1/5 CPU
           limits:               
             memory: "6168Mi"    # 6168 MB (6 GB)
-            cpu: "2500m"        # 2 1/2 CPU
+            cpu: "3000m"        # 3 CPU
         volumeMounts:
         - mountPath: /data
           name: data

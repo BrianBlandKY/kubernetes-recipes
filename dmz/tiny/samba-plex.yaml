@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tiny-samba
+  name: samba-plex
   namespace: dmz
 spec:
   selector:
-    app: tiny-samba
+    app: samba-plex
   type: NodePort
   ports: 
   - name: samba-tcp-139
@@ -22,25 +22,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tiny-samba
+  name: samba-plex
   namespace: dmz
   labels:
-    app: tiny-samba
+    app: samba-plex
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tiny-samba
+      app: samba-plex
   template:
     metadata:
       labels:
-        app: tiny-samba
+        app: samba-plex
     spec:
-      hostname: tiny-samba
+      hostname: samba-plex
       nodeSelector:
         kubernetes.io/hostname: tiny.dmz # Only deploy to tiny Node
       containers:
-      - name: tiny-samba
+      - name: samba-plex
         image: dperson/samba
         imagePullPolicy: IfNotPresent
         args: ["-r", "-S", "-s", "media;/media;yes;no;yes;all;none;[];dmz Tiny Media"]
