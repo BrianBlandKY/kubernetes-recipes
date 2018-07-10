@@ -130,6 +130,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documen
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # NOTE: Confirm kube-dns pods are running before doing anything else.
+kubectl get all --all-namespaces
 # Otherwise everything will fail with cni errors
 ```
 

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zeus-pihole
+  name: earthshaker-pihole
   namespace: shawshank
 spec:
   selector:
-    app: zeus-pihole
+    app: earthshaker-pihole
   type: NodePort
   ports: 
   - name: http
@@ -21,30 +21,30 @@ spec:
     port: 53
     targetPort: 53
   externalIPs:
-  - 10.0.0.10 # Node IP Address
+  - 10.0.0.20 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zeus-pihole
+  name: earthshaker-pihole
   namespace: shawshank
   labels:
-    app: zeus-pihole
+    app: earthshaker-pihole
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: zeus-pihole
+      app: earthshaker-pihole
   template:
     metadata:
       labels:
-        app: zeus-pihole
+        app: earthshaker-pihole
     spec:
-      hostname: zeus-pihole
+      hostname: earthshaker-pihole
       nodeSelector:
-        kubernetes.io/hostname: zeus.shawshank # Only deploy to Zeus Node    
+        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to Zeus Node    
       containers:
-      - name: zeus-pihole
+      - name: earthshaker-pihole
         image: diginc/pi-hole:debian_v3.3.1
         imagePullPolicy: IfNotPresent
         env:
@@ -55,7 +55,7 @@ spec:
         - name: DNS2
           value: 8.8.4.4
         - name: ServerIP
-          value: 10.0.0.10 # Node IP Address
+          value: 10.0.0.20 # Node IP Address
         ports:
         - containerPort: 80
           protocol: TCP
