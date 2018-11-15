@@ -68,7 +68,7 @@ spec:
         kubernetes.io/hostname: tiny.dmz # Only deploy to tiny Node
       containers:
       - name: plex
-        image: plexinc/pms-docker:1.13.2.5154-fd05be322
+        image: plexinc/pms-docker:1.13.9.5456-ecd600442
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
@@ -100,10 +100,10 @@ spec:
         resources:
           requests:
             memory: "5140Mi"    # 5140 MB (5 GB)
-            cpu: "2500m"        # 2 1/5 CPU
+            cpu: "3000m"        # 3.0 CPU
           limits:               
             memory: "6168Mi"    # 6168 MB (6 GB)
-            cpu: "3000m"        # 3 CPU
+            cpu: "3750m"        # 3.75 CPU
         volumeMounts:
         - mountPath: /data
           name: data
