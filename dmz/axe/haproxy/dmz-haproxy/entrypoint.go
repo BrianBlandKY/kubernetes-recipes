@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const version = "0.2.0"
+const version = "0.2.1"
 const internalSSLDirectory = "/etc/ssl"
 const externalSSLDirectory = "/etc/letsencrypt/live/"
 
@@ -23,7 +23,7 @@ type entryPoint struct {
 }
 
 func (ep *entryPoint) Execute() {
-	log.Printf("Starting Shawshank Proxy Daemon... Verison: %v \r\n", version)
+	log.Printf("Starting Shawshank Proxy Daemon... Version: %v \r\n", version)
 
 	log.Println("Starting HTTP HAProxy...")
 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.http.cfg")
