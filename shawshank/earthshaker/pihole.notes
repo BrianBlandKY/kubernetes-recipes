@@ -1,0 +1,11 @@
+On power outage we need to reset pihole.
+- Perform the normal delete\create
+- Then connnect to pihole terminal and set password
+
+[bland@juggernaut earthshaker]$ kubectl exec -ti earthshaker-pihole-f576b446f-pbkcl -c earthshaker-pihole -n shawshank /bin/bash
+root@earthshaker-pihole:/# pihole -a -p
+Enter New Password (Blank for no password):
+  [✓] Password Removed
+
+
+
