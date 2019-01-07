@@ -68,7 +68,7 @@ spec:
         kubernetes.io/hostname: tiny.dmz # Only deploy to tiny Node
       containers:
       - name: plex
-        image: plexinc/pms-docker:1.13.9.5456-ecd600442
+        image: plexinc/pms-docker:1.14.1.5488-cc260c476
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
