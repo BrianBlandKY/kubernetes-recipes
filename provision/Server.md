@@ -72,6 +72,7 @@ EOF
 
 # Disable SELinux
 setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 # At this time, we could only get it working with docker 17.03.02
 cd /tmp
