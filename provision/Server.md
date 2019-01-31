@@ -97,14 +97,9 @@ EOF
 # Install Kubernetes
 yum install -y kubelet kubeadm kubectl
 
-# IPTables Fix (this doesn't work)
+# IPTables Fix
 # Edit /etc/sysctl.conf
-# Add net.bridge.bridge-nf-call-iptables = 1
-# Don't do this
-# modprobe br_netfilter
-# echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
-# echo 1 > /proc/sys/net/bridge/bridge-nf-call-ip6tables
-# sudo sysctl -p
+net.bridge.bridge-nf-call-iptables = 1
 
 cat << EOF > /etc/modules-load.d/netfilter.conf
 br_netfilter
