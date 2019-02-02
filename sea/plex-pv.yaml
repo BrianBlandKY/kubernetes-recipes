@@ -13,4 +13,4 @@ spec:
   storageClassName: plex
   nfs:
     server: davy-jones-locker.sea
-    path: "/Plex"
+    path: "/volume2/plex"
