@@ -12,5 +12,5 @@ spec:
   persistentVolumeReclaimPolicy: Retain # Don't use Recycle\Delete
   storageClassName: plex
   nfs:
-    server: davy-jones-locker.sea
+    server: 10.0.0.2
     path: "/volume2/plex"
