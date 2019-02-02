@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: haproxy-dmz
-  namespace: dmz
+  name: haproxy-ocean
+  namespace: ocean
 spec:
   selector:
-    app: haproxy-dmz
+    app: haproxy-ocean
   type: NodePort          
   ports:                  # Everything should rely on internal kubernetes Service DNS resolution
   - name: http
@@ -17,30 +17,30 @@ spec:
     port: 443
     targetPort: 443
   externalIPs:
-  - 10.0.0.40 # Node IP Address
+  - 10.0.0.10 # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: haproxy-dmz
-  namespace: dmz
+  name: haproxy-ocean
+  namespace: ocean
   labels:
-    app: haproxy-dmz
+    app: haproxy-ocean
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: haproxy-dmz
+      app: haproxy-ocean
   template:
     metadata:
       labels:
-        app: haproxy-dmz
+        app: haproxy-ocean
     spec:
-      hostname: haproxy-dmz
+      hostname: haproxy-ocean
       nodeSelector:
-        kubernetes.io/hostname: axe.dmz  # Only deploy to axe Node    
+        kubernetes.io/hostname: black-pearl.sea  # Only deploy to axe Node    
       containers:
-      - name: haproxy-dmz
+      - name: haproxy-ocean
         image: haproxy-img:1.1.0
         imagePullPolicy: IfNotPresent
         ports:
