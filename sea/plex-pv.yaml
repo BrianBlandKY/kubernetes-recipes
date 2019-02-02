@@ -10,7 +10,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain # Don't use Recycle\Delete
-  storageClassName: plex    
+  storageClassName: plex
   nfs:
-    server: davy-jones-locker.sea # 10.0.0.2
+    server: 10.0.0.2 # davy-jones-locker.sea #
     path: "/Plex"
