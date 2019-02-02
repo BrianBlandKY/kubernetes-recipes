@@ -3,6 +3,8 @@ kind: PersistentVolume
 metadata:
   name: plex-nfs
 spec:
+  capacity:
+    storage: 6Ti
   accessModes:
     - ReadWriteMany
   nfs:

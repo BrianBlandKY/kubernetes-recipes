@@ -6,3 +6,6 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: ""
+  resources:
+    requests:
+      storage: 6Ti
