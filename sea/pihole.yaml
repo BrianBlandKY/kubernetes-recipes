@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: earthshaker-pihole
-  namespace: shawshank
+  name: pihole
+  namespace: ocean
 spec:
   selector:
-    app: earthshaker-pihole
+    app: pihole
   type: NodePort
   ports: 
   - name: http
@@ -21,30 +21,30 @@ spec:
     port: 53
     targetPort: 53
   externalIPs:
-  - 10.0.0.20 # Node IP Address
+  - 10.0.0.10 # black-pearl
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: earthshaker-pihole
-  namespace: shawshank
+  name: pihole
+  namespace: ocean
   labels:
-    app: earthshaker-pihole
+    app: pihole
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: earthshaker-pihole
+      app: pihole
   template:
     metadata:
       labels:
-        app: earthshaker-pihole
+        app: pihole
     spec:
-      hostname: earthshaker-pihole
+      hostname: pihole
       nodeSelector:
-        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to Zeus Node    
+        kubernetes.io/hostname: black-pearl.sea   
       containers:
-      - name: earthshaker-pihole
+      - name: pihole
         image: diginc/pi-hole:debian_v3.3.1
         imagePullPolicy: IfNotPresent
         env:
@@ -55,7 +55,7 @@ spec:
         - name: DNS2
           value: 8.8.4.4
         - name: ServerIP
-          value: 10.0.0.20 # Node IP Address
+          value: 10.0.0.10 # Node IP Address
         ports:
         - containerPort: 80
           protocol: TCP

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: earthshaker-mongo
+  name: mongo
   namespace: shawshank
 spec:
   selector:
-    app: earthshaker-mongo
+    app: mongo
   type: NodePort
   ports: 
   - name: mongo-tcp-27017
@@ -21,30 +21,30 @@ spec:
     port: 27019
     targetPort: 27019        
   externalIPs:
-  - 10.0.0.20   # earthshaker Node IP Address
+  - 10.0.0.? # Unassigned Node
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: earthshaker-mongo
+  name: mongo
   namespace: shawshank
   labels:
-    app: earthshaker-mongo
+    app: mongo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: earthshaker-mongo
+      app: mongo
   template:
     metadata:
       labels:
-        app: earthshaker-mongo
+        app: mongo
     spec:
-      hostname: earthshaker-mongo
+      hostname: mongo
       nodeSelector:
-        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to earthshaker Node
+        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to Node (unassigned)
       containers:
-      - name: earthshaker-mongo
+      - name: mongo
         image: library/mongo:3.7.9
         imagePullPolicy: IfNotPresent
         env:
