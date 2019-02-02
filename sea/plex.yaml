@@ -1,3 +1,34 @@
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: plex-nfs
+#   namespace: ocean
+# spec:
+#   capacity:
+#     storage: 6Ti
+#   #volumeMode: Filesystem
+#   accessModes:
+#     - ReadWriteMany
+#   persistentVolumeReclaimPolicy: Retain # Don't use Recycle\Delete
+#   storageClassName: plex
+#   nfs:
+#     server: 10.0.0.2
+#     path: "/volume2/plex"
+  
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: plex-nfs
+#   namespace: ocean
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   #volumeMode: Filesystem
+#   resources:
+#     requests:
+#       storage: 6Ti
+#   storageClassName: plex
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -63,7 +94,7 @@ spec:
       labels:
         app: plex
     spec:
-      hostname: plex-dmz
+      hostname: flying-dutchman-plex
       nodeSelector:
         kubernetes.io/hostname: flying-dutchman.sea
       containers:
@@ -113,8 +144,11 @@ spec:
           mountPath: /config
       volumes:
       - name: data
-        persistentVolumeClaim:
-          claimName: plex-nfs
+        hostPath:
+          path: /vault-nfs/plex       # directory location on host
+          type: DirectoryOrCreate
+        # persistentVolumeClaim:
+        #   claimName: plex-nfs
       - name: transcode
         hostPath:
           path: /vault/plex/transcode  # directory location on host
