@@ -107,14 +107,14 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-        - mountPath: /transcode
-          name: transcode
-        - mountPath: /config
-          name: config
+        - name: transcode
+          mountPath: /transcode
+        - name: config
+          mountPath: /config
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: nfs-plex
+          claimName: plex-nfs
       - name: transcode
         hostPath:
           path: /vault/plex/transcode  # directory location on host

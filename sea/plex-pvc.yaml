@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nfs-plex
+  name: plex-nfs
   namespace: ocean
 spec:
   accessModes:
     - ReadWriteMany
-  volumeMode: Filesystem
+  #volumeMode: Filesystem
   resources:
     requests:
       storage: 6Ti

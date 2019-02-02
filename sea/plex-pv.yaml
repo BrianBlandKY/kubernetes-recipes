@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nfs-plex
+  name: plex-nfs
   namespace: ocean
 spec:
   capacity:
     storage: 6Ti
-  volumeMode: Filesystem
+  #volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain # Don't use Recycle\Delete
   storageClassName: plex
   nfs:
-    server: 10.0.0.2 # davy-jones-locker.sea #
+    server: davy-jones-locker.sea
     path: "/Plex"
