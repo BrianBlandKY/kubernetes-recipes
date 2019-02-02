@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: plex
-  namespace: dmz
+  namespace: ocean
 spec:
   selector:
     app: plex
@@ -44,13 +44,13 @@ spec:
     port: 32469
     targetPort: 32469    
   externalIPs:
-  - 10.0.0.50 # tiny.dmz Node IP Address
+  - 10.0.0.11
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: plex
-  namespace: dmz
+  namespace: ocean
   labels:
     app: plex
 spec:
@@ -65,7 +65,7 @@ spec:
     spec:
       hostname: plex-dmz
       nodeSelector:
-        kubernetes.io/hostname: tiny.dmz # Only deploy to tiny Node
+        kubernetes.io/hostname: flying-dutchman.sea
       containers:
       - name: plex
         image: plexinc/pms-docker:1.14.1.5488-cc260c476
@@ -74,7 +74,7 @@ spec:
         - name: TZ
           value: "America/New_York"
         - name: ADVERTISE_IP
-          value: "http://10.0.0.50:32400/"
+          value: "http://10.0.0.11:32400/"
         #- name: ALLOWED_NETWORKS
         #  value: "10.0.0.0/24,172.16.0.0/16"
         # Add Claim
@@ -105,17 +105,16 @@ spec:
             memory: "6168Mi"    # 6168 MB (6 GB)
             cpu: "3750m"        # 3.75 CPU
         volumeMounts:
-        - mountPath: /data
-          name: data
+        - name: data
+          mountPath: /data
         - mountPath: /transcode
           name: transcode
         - mountPath: /config
           name: config
       volumes:
       - name: data
-        hostPath:
-          path: /vault/samba/media     # directory location on host
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: nfs-plex
       - name: transcode
         hostPath:
           path: /vault/plex/transcode  # directory location on host
