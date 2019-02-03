@@ -8,10 +8,10 @@ spec:
     app: pihole
   type: NodePort
   ports: 
-  - name: http
+  - name: http        # Web Interface
     protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 8080        # Server Port
+    targetPort: 80    # Pod Port
   - name: dns-tcp
     protocol: TCP
     port: 53

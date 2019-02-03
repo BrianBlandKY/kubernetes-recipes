@@ -7,7 +7,8 @@ EXPOSE 443/tcp
 
 VOLUME /etc/letsencrypt
 
-ENV CERTS nothingsbland.com, tryhard.tv
+# nothingsbland.com, 
+ENV CERTS tryhard.tv
 ENV EMAIL brianbland42@gmail.com
 
 ENV GOPATH /go
@@ -84,13 +85,13 @@ RUN wget https://redirector.gvt1.com/edgedl/go/go1.9.2.linux-amd64.tar.gz && \
 COPY haproxy.https.cfg /usr/local/etc/haproxy/haproxy.https.cfg
 COPY haproxy.http.cfg /usr/local/etc/haproxy/haproxy.http.cfg
 
-# Get into dmz-haproxy directory
-RUN mkdir -p /go/src/dmz-haproxy
-COPY dmz-haproxy/entrypoint.go /go/src/dmz-haproxy/entrypoint.go
-WORKDIR /go/src/dmz-haproxy
+# Get into app directory
+RUN mkdir -p /go/src/app
+COPY app/entrypoint.go /go/src/app/entrypoint.go
+WORKDIR /go/src/app
 RUN go build
 
-ENTRYPOINT ["./dmz-haproxy"]
+ENTRYPOINT ["./app"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build

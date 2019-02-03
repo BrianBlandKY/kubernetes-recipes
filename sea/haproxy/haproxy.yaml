@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: haproxy-ocean
+  name: haproxy
   namespace: ocean
 spec:
   selector:
-    app: haproxy-ocean
+    app: haproxy
   type: NodePort          
   ports:                  # Everything should rely on internal kubernetes Service DNS resolution
   - name: http
@@ -22,23 +22,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: haproxy-ocean
+  name: haproxy
   namespace: ocean
   labels:
-    app: haproxy-ocean
+    app: haproxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: haproxy-ocean
+      app: haproxy
   template:
     metadata:
       labels:
-        app: haproxy-ocean
+        app: haproxy
     spec:
-      hostname: haproxy-ocean
+      hostname: haproxy
       nodeSelector:
-        kubernetes.io/hostname: black-pearl.sea  # Only deploy to axe Node    
+        kubernetes.io/hostname: flying-dutchman.sea  # Only deploy to axe Node    
       containers:
       - name: haproxy-ocean
         image: haproxy-img:1.1.0

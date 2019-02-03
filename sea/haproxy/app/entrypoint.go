@@ -23,7 +23,7 @@ type entryPoint struct {
 }
 
 func (ep *entryPoint) Execute() {
-	log.Printf("Starting Shawshank Proxy Daemon... Version: %v \r\n", version)
+	log.Printf("Starting Ocean Proxy Daemon... Version: %v \r\n", version)
 
 	log.Println("Starting HTTP HAProxy...")
 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.http.cfg")
@@ -38,7 +38,7 @@ func (ep *entryPoint) Execute() {
 	log.Println("Starting HTTPS HAProxy...")
 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg")
 
-	log.Println("Shawshank Proxy Service Running...")
+	log.Println("Ocean Proxy Service Running...")
 
 	// ticker every 20 days
 	ticker := time.NewTicker(time.Hour * 480)
