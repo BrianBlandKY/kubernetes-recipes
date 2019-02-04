@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 const version = "0.2.1"
@@ -39,19 +40,19 @@ func (ep *entryPoint) Execute() {
 	ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
 
 	// ticker every 20 days
-	// ticker := time.NewTicker(time.Hour * 480)
-	// for _ = range ticker.C {
-	// 	log.Println("Renewing Certs (forced)...")
-	// 	// Renew CERT
-	// 	ep.RenewCerts()
+	ticker := time.NewTicker(time.Hour * 480)
+	for _ = range ticker.C {
+		log.Println("Renewing Certs (forced)...")
+		// Renew CERT
+		ep.RenewCerts()
 
-	// 	// Restart HAProxy
-	// 	log.Println("Stopped Proxy...")
-	// 	ep.proxyChan <- 1 // Stop Proxy
+		// Restart HAProxy
+		log.Println("Stopped Proxy...")
+		ep.proxyChan <- 1 // Stop Proxy
 
-	// 	log.Println("Starting HTTPS HAProxy...")
-	// 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
-	// }
+		log.Println("Starting HTTPS HAProxy...")
+		go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
+	}
 }
 
 func (ep *entryPoint) StartProxy(config string, stayAlive bool) {
@@ -87,7 +88,7 @@ func (ep *entryPoint) StartProxy(config string, stayAlive bool) {
 	if err != nil {
 		log.Printf("Stopped abruptly proxy... %v", err)
 		log.Printf("Err: %q \r\n", stdErr.String())
-		log.Panicf("Out: %q \r\n", stdOut.String())
+		log.Printf("Out: %q \r\n", stdOut.String())
 	}
 }
 
