@@ -41,7 +41,7 @@ spec:
         kubernetes.io/hostname: black-pearl.sea  # Only deploy to axe Node    
       containers:
       - name: haproxy-ocean
-        image: haproxy-app:1.2.5
+        image: haproxy-app:1.2.6
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80
