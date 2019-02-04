@@ -41,7 +41,7 @@ spec:
         kubernetes.io/hostname: flying-dutchman.sea  # Only deploy to axe Node    
       containers:
       - name: haproxy-ocean
-        image: haproxy-img:1.1.0
+        image: haproxy-app:1.1.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80
