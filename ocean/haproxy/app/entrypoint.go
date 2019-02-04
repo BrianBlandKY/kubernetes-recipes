@@ -74,12 +74,6 @@ func (ep *entryPoint) StartProxy(config string) {
 		log.Printf("Error starting Haproxy! %v", err)
 	}
 
-	slurp, _ := ioutil.ReadAll(stderr)
-	log.Printf("%s\n", slurp)
-
-	slurp, _ = ioutil.ReadAll(stdout)
-	log.Printf("%s\n", slurp)
-
 	// Used to force stoppage for auto renewal.
 	go func(cmd2 *exec.Cmd) {
 		for {
@@ -96,6 +90,12 @@ func (ep *entryPoint) StartProxy(config string) {
 	err = cmd.Wait()
 	if err != nil {
 		log.Printf("Stopped proxy... %v", err)
+
+		slurp, _ := ioutil.ReadAll(stderr)
+		log.Printf("%s\n", slurp)
+
+		slurp, _ = ioutil.ReadAll(stdout)
+		log.Printf("%s\n", slurp)
 	}
 }
 
