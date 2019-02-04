@@ -26,7 +26,7 @@ func (ep *entryPoint) Execute() {
 	log.Printf("Starting Ocean Proxy Daemon... Version: %v \r\n", version)
 
 	log.Println("Starting HTTP HAProxy...")
-	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.http.cfg")
+	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.http.cfg", false)
 
 	log.Println("Checking certs...")
 	ep.ReviewCerts()
@@ -36,7 +36,7 @@ func (ep *entryPoint) Execute() {
 	ep.proxyChan <- 1 // Stop Proxy
 
 	log.Println("Starting HTTPS HAProxy...")
-	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg")
+	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
 
 	log.Println("Ocean Proxy Service Running...")
 
@@ -52,11 +52,11 @@ func (ep *entryPoint) Execute() {
 		ep.proxyChan <- 1 // Stop Proxy
 
 		log.Println("Starting HTTPS HAProxy...")
-		go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg")
+		go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
 	}
 }
 
-func (ep *entryPoint) StartProxy(config string) {
+func (ep *entryPoint) StartProxy(config string, stayAlive bool) {
 	cmd := exec.Command("haproxy", "-f", config)
 
 	var stdOut bytes.Buffer
@@ -75,10 +75,12 @@ func (ep *entryPoint) StartProxy(config string) {
 		for {
 			select {
 			case _ = <-ep.proxyChan:
-				log.Println("Forced stop for auto renewal")
-				// Stop Haproxy
-				ep.proxyCounter++
-				cmd2.Process.Kill()
+				if !stayAlive {
+					log.Println("Forced stop for auto renewal")
+					// Stop Haproxy
+					ep.proxyCounter++
+					cmd2.Process.Kill()
+				}
 			}
 		}
 	}(cmd)
@@ -86,6 +88,8 @@ func (ep *entryPoint) StartProxy(config string) {
 	err = cmd.Wait()
 	if err != nil {
 		log.Printf("Stopped proxy... %v", err)
+	} else {
+		log.Printf("Stopped abruptly proxy... %v", err)
 		log.Printf("Err: %q \r\n", stdErr.String())
 		log.Panicf("Out: %q \r\n", stdOut.String())
 	}
