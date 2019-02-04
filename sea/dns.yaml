@@ -1,3 +1,4 @@
+# Optional, hopefully not needed.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,4 +6,4 @@ metadata:
   namespace: kube-system
 data:
   upstreamNameservers: |
-    ["10.0.0.1"]
+    ["8.8.8.8", "8.8.4.4"]

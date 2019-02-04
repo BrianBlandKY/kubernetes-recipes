@@ -112,23 +112,23 @@ spec:
         #  value: "10.0.0.0/24,172.16.0.0/16"
         # Add Claim
         ports:
-        - containerPort: 1900
+        - containerPort: 1900    # (for access to the Plex DLNA Server)
           protocol: UDP
-        - containerPort: 3005
+        - containerPort: 3005    # (for controlling Plex Home Theater via Plex Companion)
           protocol: TCP
-        - containerPort: 8324
+        - containerPort: 8324    # (for controlling Plex for Roku via Plex Companion)
           protocol: TCP
-        - containerPort: 32400
+        - containerPort: 32400   # (for current GDM network discovery)
           protocol: TCP
-        - containerPort: 32410
+        - containerPort: 32410   # (for current GDM network discovery)
           protocol: UDP
-        - containerPort: 32412
+        - containerPort: 32412   # (for current GDM network discovery)
           protocol: UDP
-        - containerPort: 32413
+        - containerPort: 32413   # (for current GDM network discovery)
           protocol: UDP
-        - containerPort: 32414
+        - containerPort: 32414   # (for current GDM network discovery)
           protocol: UDP
-        - containerPort: 32469
+        - containerPort: 32469   # (for access to the Plex DLNA Server)
           protocol: TCP
         resources:
           requests:
