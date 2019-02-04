@@ -32,7 +32,7 @@ spec:
         kubernetes.io/hostname: flying-dutchman.sea
       containers:    
       - name: nothingsbland-app			# NothingsBland App
-        image: nothingsbland-img:1.0.0
+        image: nothingsbland-app:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080

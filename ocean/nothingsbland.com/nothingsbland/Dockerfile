@@ -59,7 +59,7 @@ ENTRYPOINT [ "./web", "--config", "app.prod.yaml" ]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t nothingsbland-img:1.0.0 -f Dockerfile .
+# docker build -t nothingsbland-app:1.0.0 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 8080:8080 --name nothingsbland nothingsbland-img

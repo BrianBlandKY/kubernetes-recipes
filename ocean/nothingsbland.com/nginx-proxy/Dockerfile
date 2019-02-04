@@ -25,7 +25,7 @@ ENTRYPOINT ["./entrypoint.sh"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # Build
-# docker build -t nginx-img:1.0.0 -f Dockerfile .
+# docker build -t nothingsbland-img:1.0.0 -f Dockerfile .
 
 # Run
 # docker run -tdi -p 8080:8080 -e "PROXY_SERVICE_NAME=192.168.1.8" --name nginx nginx-img
