@@ -38,7 +38,7 @@ spec:
     spec:
       hostname: haproxy
       nodeSelector:
-        kubernetes.io/hostname: flying-dutchman.sea  # Only deploy to axe Node    
+        kubernetes.io/hostname: black-pearl.sea  # Only deploy to axe Node    
       containers:
       - name: haproxy-ocean
         image: haproxy-app:1.1.0
