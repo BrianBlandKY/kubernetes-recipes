@@ -1,7 +1,7 @@
 
 
 ```
-$ kubectl exec busybox cat /etc/resolv.conf
+$ kubectl exec busybox cat /etc/resolv.conf -n ocean
 
-$ kubectl exec busybox ping google.com
+$ kubectl exec busybox ping google.com -n ocean
 ```

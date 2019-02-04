@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-nothingsbland
+  name: nothingsbland-app
   namespace: ocean
 spec:
   selector:
-    app: app-nothingsbland
+    app: nothingsbland-app
   ports:
   - name: http
     protocol: TCP
@@ -15,23 +15,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-nothingsbland
+  name: nothingsbland-app
   namespace: ocean
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: app-nothingsbland
+      app: nothingsbland-app
   template:
     metadata:
       labels:
-        app: app-nothingsbland
+        app: nothingsbland-app
     spec:
-      hostname: app-nothingsbland
+      hostname: nothingsbland-app
       nodeSelector:
-        kubernetes.io/hostname: flying-dutchman    
+        kubernetes.io/hostname: flying-dutchman.sea
       containers:    
-      - name: app-nothingsbland			# NothingsBland App
+      - name: nothingsbland-app			# NothingsBland App
         image: nothingsbland-img:1.0.0
         imagePullPolicy: IfNotPresent
         ports:

@@ -87,6 +87,9 @@ yum install -y docker-ce-17.03.2.ce-1.el7.centos.x86_64.rpm
 systemctl enable docker && systemctl start docker
 
 # Ensure Docker compatibility
+# "dns": ["8.8.8.8", "8.8.4.4"]
+# Note: if you need to build docker images on the hosts you will need to remove
+# the iptables entry
 cat << EOF > /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],

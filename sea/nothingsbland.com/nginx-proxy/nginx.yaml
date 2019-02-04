@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-nothingsbland
-  namespace: dmz
+  name: nothingsbland-nginx
+  namespace: ocean
   labels:
-    app: nginx-nothingsbland
+    app: nothingsbland-nginx
 spec:
   selector:
-    app: nginx-nothingsbland
+    app: nothingsbland-nginx
   type: NodePort
   ports:
   - name: http
@@ -15,36 +15,35 @@ spec:
     port: 8081
     targetPort: 8080
   externalIPs:
-  - 10.0.0.40	# Node IP Address
+  - 10.0.0.11	  # Node IP Address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-nothingsbland
-  namespace: dmz
+  name: nothingsbland-nginx
+  namespace: ocean
   labels:
-    app: nginx-nothingsbland
+    app: nothingsbland-nginx
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nginx-nothingsbland
+      app: nothingsbland-nginx
   template:
     metadata:
       labels:
-        app: nginx-nothingsbland
+        app: nothingsbland-nginx
     spec:
-      hostname: nginx-nothingsbland
+      hostname: nothingsbland-nginx
       nodeSelector:
-        kubernetes.io/hostname: axe.dmz 	# Only deploy to axe Node    
+        kubernetes.io/hostname: flying-dutchman.sea 	# Only deploy to axe Node    
       containers:
-      - name: nginx-nothingsbland		# Nginx Proxy
+      - name: nothingsbland-nginx     # Nginx Proxy
         image: nothingsbland-nginx:1.0.0
         imagePullPolicy: IfNotPresent
         env:
         - name: PROXY_SERVICE_NAME		# Kubernetes Service Discovery?
-          #value: 10.97.42.169
-          value: app-nothingsbland	   	# Service DNS Name
+          value: nothingsbland-app	  # Service DNS Name
         ports:
           - containerPort: 8080 # Nginx
             protocol: TCP
