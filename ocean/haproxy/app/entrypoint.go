@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	"time"
 )
 
 const version = "0.2.1"
@@ -36,24 +35,23 @@ func (ep *entryPoint) Execute() {
 	ep.proxyChan <- 1 // Stop Proxy
 
 	log.Println("Starting HTTPS HAProxy...")
-	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
-
 	log.Println("Ocean Proxy Service Running...")
+	ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
 
 	// ticker every 20 days
-	ticker := time.NewTicker(time.Hour * 480)
-	for _ = range ticker.C {
-		log.Println("Renewing Certs (forced)...")
-		// Renew CERT
-		ep.RenewCerts()
+	// ticker := time.NewTicker(time.Hour * 480)
+	// for _ = range ticker.C {
+	// 	log.Println("Renewing Certs (forced)...")
+	// 	// Renew CERT
+	// 	ep.RenewCerts()
 
-		// Restart HAProxy
-		log.Println("Stopped Proxy...")
-		ep.proxyChan <- 1 // Stop Proxy
+	// 	// Restart HAProxy
+	// 	log.Println("Stopped Proxy...")
+	// 	ep.proxyChan <- 1 // Stop Proxy
 
-		log.Println("Starting HTTPS HAProxy...")
-		go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
-	}
+	// 	log.Println("Starting HTTPS HAProxy...")
+	// 	go ep.StartProxy("/usr/local/etc/haproxy/haproxy.https.cfg", true)
+	// }
 }
 
 func (ep *entryPoint) StartProxy(config string, stayAlive bool) {
@@ -87,8 +85,6 @@ func (ep *entryPoint) StartProxy(config string, stayAlive bool) {
 
 	err = cmd.Wait()
 	if err != nil {
-		log.Printf("Stopped proxy... %v", err)
-	} else {
 		log.Printf("Stopped abruptly proxy... %v", err)
 		log.Printf("Err: %q \r\n", stdErr.String())
 		log.Panicf("Out: %q \r\n", stdOut.String())
@@ -180,8 +176,6 @@ func (ep *entryPoint) ReviewCerts() {
 
 func (ep *entryPoint) RenewCerts() {
 	cmd := exec.Command("certbot", "renew", "--force-renewal", "--tls-sni-01-port=8888")
-
-	// cmd.Stdin
 
 	var stdOut bytes.Buffer
 	cmd.Stdout = &stdOut
