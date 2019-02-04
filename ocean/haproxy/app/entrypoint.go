@@ -59,25 +59,33 @@ func (ep *entryPoint) Execute() {
 func (ep *entryPoint) StartProxy(config string) {
 	cmd := exec.Command("haproxy", "-f", config)
 
-	// cmd.Stdin
-
-	var stdOut bytes.Buffer
-	cmd.Stdout = &stdOut
-
-	var stdErr bytes.Buffer
-	cmd.Stderr = &stdErr
-
-	err := cmd.Start()
+	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		log.Printf("Error starting Haproxy! %v", err)
-		log.Printf("Err: %q \r\n", stdErr.String())
-		log.Panicf("Out: %q \r\n", stdOut.String())
+		log.Printf("haproxy error \n %v \n", err)
 	}
 
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		log.Printf("haproxy error \n %v \n", err)
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		log.Printf("Error starting Haproxy! %v", err)
+	}
+
+	slurp, _ := ioutil.ReadAll(stderr)
+	log.Printf("%s\n", slurp)
+
+	slurp, _ = ioutil.ReadAll(stdout)
+	log.Printf("%s\n", slurp)
+
+	// Used to force stoppage for auto renewal.
 	go func(cmd2 *exec.Cmd) {
 		for {
 			select {
 			case _ = <-ep.proxyChan:
+				log.Println("Forced stop for auto renewal")
 				// Stop Haproxy
 				ep.proxyCounter++
 				cmd2.Process.Kill()
