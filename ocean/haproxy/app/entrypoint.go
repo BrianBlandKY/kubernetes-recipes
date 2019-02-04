@@ -59,17 +59,13 @@ func (ep *entryPoint) Execute() {
 func (ep *entryPoint) StartProxy(config string) {
 	cmd := exec.Command("haproxy", "-f", config)
 
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		log.Printf("haproxy error \n %v \n", err)
-	}
+	var stdOut bytes.Buffer
+	cmd.Stdout = &stdOut
 
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		log.Printf("haproxy error \n %v \n", err)
-	}
+	var stdErr bytes.Buffer
+	cmd.Stderr = &stdErr
 
-	err = cmd.Start()
+	err := cmd.Start()
 	if err != nil {
 		log.Printf("Error starting Haproxy! %v", err)
 	}
@@ -90,12 +86,8 @@ func (ep *entryPoint) StartProxy(config string) {
 	err = cmd.Wait()
 	if err != nil {
 		log.Printf("Stopped proxy... %v", err)
-
-		slurp, _ := ioutil.ReadAll(stderr)
-		log.Printf("%s\n", slurp)
-
-		slurp, _ = ioutil.ReadAll(stdout)
-		log.Printf("%s\n", slurp)
+		log.Printf("Err: %q \r\n", stdErr.String())
+		log.Panicf("Out: %q \r\n", stdOut.String())
 	}
 }
 
