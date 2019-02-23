@@ -151,7 +151,7 @@ spec:
       # persistentVolumeClaim:
       #   claimName: plex-nfs
         hostPath:
-          path: /vault-nfs/apps/plex/data       # directory location on host
+          path: /vault-nfs/apps/plex/       # directory location on host
           type: DirectoryOrCreate
       - name: transcode
         hostPath:
