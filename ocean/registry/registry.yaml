@@ -36,7 +36,7 @@ spec:
         kubernetes.io/hostname: flying-dutchman.sea
       containers:
       - name: registry
-        image: registry:2.7.1
+        image: ocean-registry:0.1.0
         imagePullPolicy: IfNotPresent
         env:
         ports:
