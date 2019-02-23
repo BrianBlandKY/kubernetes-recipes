@@ -72,5 +72,6 @@ spec:
       volumes:
       - name: data
         hostPath:
-          path: /vault-nfs/apps/mongo/data  		# host directory
+          # Mongo will not start if this is NFS.
+          path: /vault/apps/mongo/data  		# host directory
           type: DirectoryOrCreate
