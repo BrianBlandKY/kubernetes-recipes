@@ -50,5 +50,5 @@ spec:
       volumes:
       - name: logs
         hostPath:
-          path: /vault/apps/nothingsbland/logs
+          path: /vault-nfs/apps/nothingsbland
           type: DirectoryOrCreate

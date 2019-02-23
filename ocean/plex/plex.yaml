@@ -94,7 +94,7 @@ spec:
       labels:
         app: plex
     spec:
-      hostname: flying-dutchman-plex
+      hostname: hebron-plex
       nodeSelector:
         kubernetes.io/hostname: flying-dutchman.sea
       containers:
@@ -146,16 +146,18 @@ spec:
           mountPath: /config
       volumes:
       - name: data
+      # Convert to using NFS volumes at some point.
+      # We're using the host mounted NFS location.
+      # persistentVolumeClaim:
+      #   claimName: plex-nfs
         hostPath:
-          path: /vault-nfs/plex       # directory location on host
+          path: /vault-nfs/apps/plex/data       # directory location on host
           type: DirectoryOrCreate
-        # persistentVolumeClaim:
-        #   claimName: plex-nfs
       - name: transcode
         hostPath:
-          path: /vault/plex/transcode  # directory location on host
+          path: /vault/apps/plex/transcode  # directory location on host
           type: DirectoryOrCreate
       - name: config
         hostPath:
-          path: /vault/plex/config     # directory location on host
+          path: /vault/apps/plex/config     # directory location on host
           type: DirectoryOrCreate

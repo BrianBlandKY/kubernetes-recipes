@@ -61,5 +61,5 @@ spec:
       volumes:
       - name: letsencrypt
         hostPath:
-          path: /vault/apps/letsencrypt  # directory location on host
+          path: /vault-nfs/apps/letsencrypt  # directory location on host
           type: DirectoryOrCreate

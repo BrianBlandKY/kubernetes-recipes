@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongo
-  namespace: shawshank
+  namespace: ocean
 spec:
   selector:
     app: mongo
@@ -21,13 +21,13 @@ spec:
     port: 27019
     targetPort: 27019        
   externalIPs:
-  - 10.0.0.? # Unassigned Node
+  - 10.0.0.10 # Unassigned Node
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo
-  namespace: shawshank
+  namespace: ocean
   labels:
     app: mongo
 spec:
@@ -42,16 +42,16 @@ spec:
     spec:
       hostname: mongo
       nodeSelector:
-        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to Node (unassigned)
+        kubernetes.io/hostname: black-pearl.sea # Only deploy to Node (unassigned)
       containers:
       - name: mongo
         image: library/mongo:3.7.9
         imagePullPolicy: IfNotPresent
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
-          value: inception
+          value: interstellar
         - name: MONGO_INITDB_ROOT_PASSWORD
-          value: inception
+          value: interstellar
         ports:
         - containerPort: 27017
           protocol: TCP
@@ -72,5 +72,5 @@ spec:
       volumes:
       - name: data
         hostPath:
-          path: /vault/mongo/data  		# host directory
+          path: /vault-nfs/apps/mongo/data  		# host directory
           type: DirectoryOrCreate
