@@ -1,6 +1,5 @@
 # registry
 
-
 https://docs.docker.com/registry/deploying/
 https://docs.docker.com/registry/deploying/#storage-customization
 
