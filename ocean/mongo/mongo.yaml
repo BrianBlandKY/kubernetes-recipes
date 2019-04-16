@@ -45,7 +45,7 @@ spec:
         kubernetes.io/hostname: black-pearl.sea # Only deploy to Node (unassigned)
       containers:
       - name: mongo
-        image: library/mongo:3.7.9
+        image: library/mongo:4.1.10
         imagePullPolicy: IfNotPresent
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
