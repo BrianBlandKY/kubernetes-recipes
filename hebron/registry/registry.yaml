@@ -67,11 +67,7 @@ spec:
     storage: 10Gi
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - hard
-    - nfsvers=4.1
+    - ReadWriteMany
   nfs:
     path: /volume2/Apps/registry
     server: davy-jones-locker.sea
@@ -83,7 +79,7 @@ metadata:
   namespace: hebron
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   volumeMode: Filesystem
   resources:
     requests:
