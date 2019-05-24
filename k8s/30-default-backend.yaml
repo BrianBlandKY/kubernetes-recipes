@@ -51,5 +51,3 @@ spec:
               memory: 49Mi
           securityContext:
             runAsUser: 65534
----
-
