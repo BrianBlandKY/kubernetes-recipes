@@ -1,0 +1,123 @@
+piVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: nothingsbland
+  name: www
+  annotations:
+    certmanager.k8s.io/issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+  labels:
+    app: www
+spec:
+    - host: nothingsbland.com
+      http:
+        paths:
+          - backend:
+              serviceName: www
+              servicePort: 80
+            path: /
+    - host: www.nothingsbland.com
+      http:
+        paths:
+          - backend:
+              serviceName: www
+              servicePort: 80
+            path: /
+  tls:
+    - hosts:
+        - nothingsbland.com
+        - www.nothingsbland.com
+      secretName: www-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nothingsbland
+  labels:
+    app: www
+  name: www
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+  selector:
+    app: www
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  namespace: nothingsbland
+  name: www
+spec:
+  secretname: www-tls
+  issuerRef:
+    name: letsencrypt
+  commonName: nothingsbland.com
+  dnsNames:
+    - nothingsbland.com
+    - www.nothingsbland.com
+  acme:
+    config:
+      - http01:
+          ingress: www
+        domains:
+          - nothingsbland.com
+          - www.nothingsbland.com
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nothingsbland
+  name: www
+  labels:
+    app: www
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: www   
+  template:
+    metadata:
+      labels:
+        app: www
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: flying-dutchman.sea   
+      containers:
+        - name: www
+          image: nothingsbland/www:latest
+          imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        resources:
+         requests:
+           memory: "100M"      # 100 MB
+           cpu: "1m"           # .001 CPU (smallest unit possible)
+         limits:               
+           memory: "100M"      # 100 MB
+           cpu: "1m"           # .001 CPU (smallest unit possible)
+        volumeMounts:
+        - mountPath: /apps/nothingsbland/logs
+          name: logs
+          readOnly: false
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+        claimName: logs
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: nothingsbland
+  name: www
+  labels:
+    app: www
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 2Gi
+---

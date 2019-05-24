@@ -1,0 +1,25 @@
+# NothingsBland Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nothingsbland
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tryhard
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hebron
+
+# What are our services?
+# - hebron
+#   - PiHole
+#   - Private Docker Registry
+#   - Mongo
+# - tryhard
+#   - plex
+# - nothingsbland
+#   - www

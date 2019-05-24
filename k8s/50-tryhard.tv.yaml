@@ -1,0 +1,180 @@
+piVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: tryhard
+  name: www
+  annotations:
+    certmanager.k8s.io/issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+  labels:
+    app: www
+spec:
+    - host: tryhard.tv
+      http:
+        paths:
+          - backend:
+              serviceName: www
+              servicePort: 32400
+            path: /
+    - host: www.tryhard.tv
+      http:
+        paths:
+          - backend:
+              serviceName: www
+              servicePort: 32400
+            path: /
+  tls:
+    - hosts:
+        - tryhard.tv
+        - www.tryhard.tv
+      secretName: www-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: tryhard
+  labels:
+    app: www
+  name: www
+spec:
+  selector:
+    app: www
+  ports: 
+    - name: plex-tcp-3005
+      protocol: TCP
+      port: 3005
+      targetPort: 3005
+    - name: plex-tcp-8324
+      protocol: TCP
+      port: 8324
+      targetPort: 8324
+    - name: plex-udp-1900
+      protocol: UDP
+      port: 1900
+      targetPort: 1900
+    - name: plex-tcp-32400
+      protocol: TCP
+      port: 32400
+      targetPort: 32400    
+    - name: plex-udp-32410
+      protocol: UDP
+      port: 32410
+      targetPort: 32410
+    - name: plex-udp-32412
+      protocol: UDP
+      port: 32412
+      targetPort: 32412
+    - name: plex-udp-32413
+      protocol: UDP
+      port: 32413
+      targetPort: 32413
+    - name: plex-udp-32414
+      protocol: UDP
+      port: 32414
+      targetPort: 32414
+    - name: plex-tcp-32469
+      protocol: TCP
+      port: 32469
+      targetPort: 32469    
+    externalIPs:
+    - 10.0.0.11
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  namespace: tryhard
+  name: www
+spec:
+  secretname: www-tls
+  issuerRef:
+    name: letsencrypt
+  commonName: tryhard.tv
+  dnsNames:
+    - tryhard.tv
+    - www.tryhard.tv
+  acme:
+    config:
+      - http01:
+          ingress: www
+        domains:
+          - tryhard.tv
+          - www.tryhard.tv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: tryhard
+  name: www
+  labels:
+    app: www
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: www   
+  template:
+    metadata:
+      labels:
+        app: www
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: flying-dutchman.sea   
+      containers:
+        - name: www
+          image: plexinc/pms-docker:1.14.1.5488-cc260c476
+          imagePullPolicy: Always
+          env:
+          - name: TZ
+            value: "America/New_York"
+          - name: ADVERTISE_IP
+            value: "http://10.0.0.11:32400/"
+        ports:
+        - containerPort: 1900    # (for access to the Plex DLNA Server)
+          protocol: UDP
+        - containerPort: 3005    # (for controlling Plex Home Theater via Plex Companion)
+          protocol: TCP
+        - containerPort: 8324    # (for controlling Plex for Roku via Plex Companion)
+          protocol: TCP
+        - containerPort: 32400   # (for current GDM network discovery)
+          protocol: TCP
+        - containerPort: 32410   # (for current GDM network discovery)
+          protocol: UDP
+        - containerPort: 32412   # (for current GDM network discovery)
+          protocol: UDP
+        - containerPort: 32413   # (for current GDM network discovery)
+          protocol: UDP
+        - containerPort: 32414   # (for current GDM network discovery)
+          protocol: UDP
+        - containerPort: 32469   # (for access to the Plex DLNA Server)
+          protocol: TCP
+        resources:
+          requests:
+            memory: "5140Mi"    # 5140 MB (5 GB)
+            cpu: "3000m"        # 3.0 CPU
+          limits:               
+            memory: "6168Mi"    # 6168 MB (6 GB)
+            cpu: "3750m"        # 3.75 CPU
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: transcode
+          mountPath: /transcode
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: data
+      # Convert to using NFS volumes at some point.
+      # We're using the host mounted NFS location.
+      # persistentVolumeClaim:
+      #   claimName: plex-nfs
+        hostPath:
+          path: /vault-nfs/apps/plex/       # directory location on host
+          type: DirectoryOrCreate
+      - name: transcode
+        hostPath:
+          path: /vault/apps/plex/transcode  # directory location on host
+          type: DirectoryOrCreate
+      - name: config
+        hostPath:
+          path: /vault/apps/plex/config     # directory location on host
+          type: DirectoryOrCreate

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
-  namespace: shawshank
+  namespace: hebron
 spec:
   selector:
     app: mysql
@@ -13,33 +13,34 @@ spec:
     port: 3306
     targetPort: 3306
   externalIPs:
-  - 10.0.0.? # Unassigned Nodes
+  - 10.0.0.? # TODO Unassigned Nodes
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: earthshaker-mysql
-  namespace: shawshank
+  name: mysql
+  namespace: hebron
   labels:
-    app: earthshaker-mysql
+    app: mysql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: earthshaker-mysql
+      app: mysql
   template:
     metadata:
       labels:
-        app: earthshaker-mysql
+        app: mysql
     spec:
-      hostname: earthshaker-mysql
+      hostname: mysql
       nodeSelector:
-        kubernetes.io/hostname: earthshaker.shawshank # Only deploy to earthshaker Node
+        kubernetes.io/hostname: # TODO
       containers:
       - name: earthshaker-mysql
         image: library/mysql:8
         imagePullPolicy: IfNotPresent
         env:
+          # TODO Convert to claim or resource
         - name: MYSQL_ROOT_PASSWORD
           value: inception
         ports:
@@ -57,6 +58,7 @@ spec:
           name: config
         - mountPath: /var/lib/mysql
           name: data
+      # TODO Convert to claims!
       volumes:
       - name: config
         hostPath:

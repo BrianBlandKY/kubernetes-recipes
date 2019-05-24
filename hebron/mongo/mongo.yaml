@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongo
-  namespace: ocean
+  namespace: hebron
 spec:
   selector:
     app: mongo
@@ -27,7 +27,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo
-  namespace: ocean
+  namespace: hebron
   labels:
     app: mongo
 spec:
@@ -73,5 +73,6 @@ spec:
       - name: data
         hostPath:
           # Mongo will not start if this is NFS.
+          # Convert to claim
           path: /vault/apps/mongo/data  		# host directory
           type: DirectoryOrCreate
