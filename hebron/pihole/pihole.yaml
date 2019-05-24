@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pihole
-  namespace: ocean
+  namespace: hebron
 spec:
   selector:
     app: pihole
@@ -27,7 +27,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pihole
-  namespace: ocean
+  namespace: hebron
   labels:
     app: pihole
 spec:
@@ -45,17 +45,17 @@ spec:
         kubernetes.io/hostname: black-pearl.sea   
       containers:
       - name: pihole
-        image: diginc/pi-hole:debian_v3.3.1
+        image: pihole/pihole:4.3_amd64
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
           value: "America/New_York"
         - name: DNS1
-          value: 8.8.8.8
+          value: 1.1.1.1
         - name: DNS2
-          value: 8.8.4.4
-        - name: ServerIP
-          value: 10.0.0.10 # Node IP Address
+          value: 1.0.0.1
+        # - name: ServerIP
+        #   value: 10.0.0.10 # Node IP Address
         ports:
         - containerPort: 80
           protocol: TCP
