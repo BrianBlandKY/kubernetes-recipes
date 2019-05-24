@@ -63,6 +63,8 @@ metadata:
   name: registry
   namespace: hebron
 spec:
+  capacity:
+    storage: 10Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -83,3 +85,6 @@ spec:
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Gi  
