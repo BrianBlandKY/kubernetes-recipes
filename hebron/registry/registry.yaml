@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: registry
-  namespace: ocean
+  namespace: hebron
 spec:
   selector:
     app: registry
@@ -18,7 +18,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: registry
-  namespace: ocean
+  namespace: hebron
   labels:
     app: registry
 spec:
@@ -36,7 +36,7 @@ spec:
         kubernetes.io/hostname: flying-dutchman.sea
       containers:
       - name: registry
-        image: ocean-registry:0.1.0
+        image: hebron-registry:0.1.0
         imagePullPolicy: IfNotPresent
         env:
         ports:
@@ -54,6 +54,32 @@ spec:
           mountPath: /var/lib/registry
       volumes:
       - name: data
-        hostPath:
-          path: /vault-nfs/apps/registry       # directory location on host
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: registry
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: registry
+  namespace: hebron
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /volume2/Apps/registry
+    server: davy-jones-locker.sea
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry
+  namespace: hebron
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
