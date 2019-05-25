@@ -76,9 +76,7 @@ spec:
     - name: plex-tcp-32469
       protocol: TCP
       port: 32469
-      targetPort: 32469    
-    # externalIPs:
-    # - 10.0.0.11
+      targetPort: 32469
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
@@ -118,6 +116,7 @@ spec:
       labels:
         app: www
     spec:
+      hostname: davy-jones-media
       nodeSelector:
         kubernetes.io/hostname: flying-dutchman.sea   
       containers:
@@ -129,49 +128,49 @@ spec:
             value: "America/New_York"
           - name: ADVERTISE_IP
             value: "https://tryhard.tv/"
-        ports:
-        - containerPort: 1900    # (for access to the Plex DLNA Server)
-          protocol: UDP
-        - containerPort: 3005    # (for controlling Plex Home Theater via Plex Companion)
-          protocol: TCP
-        - containerPort: 8324    # (for controlling Plex for Roku via Plex Companion)
-          protocol: TCP
-        - containerPort: 32400   # (for current GDM network discovery)
-          protocol: TCP
-        - containerPort: 32410   # (for current GDM network discovery)
-          protocol: UDP
-        - containerPort: 32412   # (for current GDM network discovery)
-          protocol: UDP
-        - containerPort: 32413   # (for current GDM network discovery)
-          protocol: UDP
-        - containerPort: 32414   # (for current GDM network discovery)
-          protocol: UDP
-        - containerPort: 32469   # (for access to the Plex DLNA Server)
-          protocol: TCP
-        resources:
-          requests:
-            memory: "5140Mi"    # 5140 MB (5 GB)
-            cpu: "3000m"        # 3.0 CPU
-          limits:               
-            memory: "6168Mi"    # 6168 MB (6 GB)
-            cpu: "3750m"        # 3.75 CPU
-        volumeMounts:
+          ports:
+          - containerPort: 1900    # (for access to the Plex DLNA Server)
+            protocol: UDP
+          - containerPort: 3005    # (for controlling Plex Home Theater via Plex Companion)
+            protocol: TCP
+          - containerPort: 8324    # (for controlling Plex for Roku via Plex Companion)
+            protocol: TCP
+          - containerPort: 32400   # (for current GDM network discovery)
+            protocol: TCP
+          - containerPort: 32410   # (for current GDM network discovery)
+            protocol: UDP
+          - containerPort: 32412   # (for current GDM network discovery)
+            protocol: UDP
+          - containerPort: 32413   # (for current GDM network discovery)
+            protocol: UDP
+          - containerPort: 32414   # (for current GDM network discovery)
+            protocol: UDP
+          - containerPort: 32469   # (for access to the Plex DLNA Server)
+            protocol: TCP
+          resources:
+            requests:
+              memory: "5140Mi"    # 5140 MB (5 GB)
+              cpu: "3000m"        # 3.0 CPU
+            limits:               
+              memory: "6168Mi"    # 6168 MB (6 GB)
+              cpu: "3750m"        # 3.75 CPU
+          volumeMounts:
+          - name: data
+            mountPath: /data
+          - name: transcode
+            mountPath: /transcode
+          - name: config
+            mountPath: /config
+        volumes:
         - name: data
-          mountPath: /data
+          persistentVolumeClaim:
+            claimName: plex-media
         - name: transcode
-          mountPath: /transcode
+          persistentVolumeClaim:
+            claimName: plex-transcode
         - name: config
-          mountPath: /config
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: plex-media
-      - name: transcode
-        persistentVolumeClaim:
-          claimName: plex-transcode
-      - name: config
-        persistentVolumeClaim:
-          claimName: plex-config
+          persistentVolumeClaim:
+            claimName: plex-config
 ---
 apiVersion: v1
 kind: PersistentVolume
