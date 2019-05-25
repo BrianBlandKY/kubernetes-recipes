@@ -231,9 +231,9 @@ metadata:
 spec:
   type: NodePort
   ports: 
-  - name: http            # Web Interface
+  - port: 80
     targetPort: http
-  - name: https
+  - name: 443
     targetPort: https
   externalIPs:
   - 10.0.0.10   # black-pearl (entry point?)
