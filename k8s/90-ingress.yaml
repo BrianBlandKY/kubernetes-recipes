@@ -230,14 +230,14 @@ metadata:
     role: controller
 spec:
   type: NodePort
-    ports: 
-    - name: http            # Web Interface
-      protocol: TCP
-      port: 80              # Server Port
-      targetPort: http      # Pod Port
-    - name: https
-      protocol: TCP
-      port: 443
-      targetPort: https
-    externalIPs:
-    - 10.0.0.10   # black-pearl (entry point?)
+  ports: 
+  - name: http            # Web Interface
+    protocol: TCP
+    port: 80              # Server Port
+    targetPort: http      # Pod Port
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: https
+  externalIPs:
+  - 10.0.0.10   # black-pearl (entry point?)
