@@ -28,7 +28,7 @@ spec:
     - hosts:
         - tryhard.tv
         - www.tryhard.tv
-      secretName: www-tls
+      secretName: tryhard-tv-tls
 ---
 apiVersion: v1
 kind: Service
@@ -84,7 +84,7 @@ metadata:
   namespace: tryhard
   name: www
 spec:
-  secretname: www-tls
+  secretname: tryhard-tv-tls
   issuerRef:
     name: letsencrypt
   commonName: tryhard.tv
