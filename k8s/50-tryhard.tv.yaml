@@ -76,8 +76,8 @@ spec:
       protocol: TCP
       port: 32469
       targetPort: 32469    
-    externalIPs:
-    - 10.0.0.11
+    # externalIPs:
+    # - 10.0.0.11
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
@@ -121,13 +121,13 @@ spec:
         kubernetes.io/hostname: flying-dutchman.sea   
       containers:
         - name: www
-          image: plexinc/pms-docker:1.14.1.5488-cc260c476
-          imagePullPolicy: Always
+          image: plexinc/pms-docker:1.15.6.1079-78232c603
+          imagePullPolicy: IfNotPresent
           env:
           - name: TZ
-            value: "America/New_York"
+            value: America/New_York
           - name: ADVERTISE_IP
-            value: "http://10.0.0.11:32400/"
+            value: "https://tryhard.tv/"
         ports:
         - containerPort: 1900    # (for access to the Plex DLNA Server)
           protocol: UDP
@@ -163,18 +163,95 @@ spec:
           mountPath: /config
       volumes:
       - name: data
-      # Convert to using NFS volumes at some point.
-      # We're using the host mounted NFS location.
-      # persistentVolumeClaim:
-      #   claimName: plex-nfs
-        hostPath:
-          path: /vault-nfs/apps/plex/       # directory location on host
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: plex-media
       - name: transcode
-        hostPath:
-          path: /vault/apps/plex/transcode  # directory location on host
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: plex-transcode
       - name: config
-        hostPath:
-          path: /vault/apps/plex/config     # directory location on host
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: plex-config
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-media
+  namespace: tryhard
+spec:
+  capacity:
+    storage: 15000Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /volume1/Media
+    server: davy-jones-locker.sea
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-transcode
+  namespace: tryhard
+spec:
+  capacity:
+    storage: 4000Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /volume2/Apps/plex/transcode
+    server: davy-jones-locker.sea
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-config
+  namespace: tryhard
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /volume2/Apps/plex/config
+    server: davy-jones-locker.sea
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-media
+  namespace: tryhard
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 15000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-transcode
+  namespace: tryhard
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 4000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config
+  namespace: tryhard
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi  
