@@ -126,7 +126,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
           - name: TZ
-            value: America/New_York
+            value: "America/New_York"
           - name: ADVERTISE_IP
             value: "https://tryhard.tv/"
         ports:
