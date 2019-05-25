@@ -130,7 +130,7 @@ spec:
           - name: TZ
             value: "America/New_York"
           - name: ADVERTISE_IP
-            value: "https://tryhard.tv/"
+            value: "https://10.0.0.11:32400/"
           ports:
           - containerPort: 1900    # (for access to the Plex DLNA Server)
             protocol: UDP
