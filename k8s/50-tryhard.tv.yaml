@@ -161,16 +161,16 @@ spec:
             mountPath: /transcode
           - name: config
             mountPath: /config
-        volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: plex-media
-        - name: transcode
-          persistentVolumeClaim:
-            claimName: plex-transcode
-        - name: config
-          persistentVolumeClaim:
-            claimName: plex-config
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: plex-media
+      - name: transcode
+        persistentVolumeClaim:
+          claimName: plex-transcode
+      - name: config
+        persistentVolumeClaim:
+          claimName: plex-config
 ---
 apiVersion: v1
 kind: PersistentVolume
