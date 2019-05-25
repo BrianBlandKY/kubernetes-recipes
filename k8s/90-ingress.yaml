@@ -1,6 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: ingress-tcp-services
+  namespace: kube-public
+  labels:
+    app: ingress
+    role: controller
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: ingress-configuration
   namespace: kube-public
   labels:
