@@ -239,14 +239,18 @@ metadata:
     role: controller
 spec:
   type: NodePort
+  selector:
+    app: ingress
+    role: controller
   ports: 
   - name: http
     port: 80
-    targetPort: 80
+    targetPort: http
     protocol: TCP
   - name: https
     port: 443
-    targetPort: 443
+    targetPort: https
     protocol: TCP
   externalIPs:
   - 10.0.0.10   # black-pearl (entry point?)
+---
