@@ -179,7 +179,7 @@ metadata:
   namespace: tryhard
 spec:
   capacity:
-    storage: 15000Gi
+    storage: 15Ti
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -194,7 +194,7 @@ metadata:
   namespace: tryhard
 spec:
   capacity:
-    storage: 4000Gi
+    storage: 4Ti
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -228,7 +228,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 15000Gi
+      storage: 15Ti
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -241,7 +241,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 4000Gi
+      storage: 4Ti
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -254,4 +254,4 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 1Gi  
+      storage: 1Gi
