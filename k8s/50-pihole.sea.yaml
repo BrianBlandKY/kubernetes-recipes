@@ -57,7 +57,7 @@ spec:
       labels:
         app: pihole
     spec:
-      hostname: pihole
+      hostname: pihole.sea
       nodeSelector:
         kubernetes.io/hostname: black-pearl.sea   
       containers:
