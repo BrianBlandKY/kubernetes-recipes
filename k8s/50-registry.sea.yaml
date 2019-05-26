@@ -37,6 +37,7 @@ metadata:
   name: registry
   namespace: hebron
 spec:
+  storageClassName: registry
   accessModes:
     - ReadWriteMany
   volumeMode: Filesystem
@@ -61,7 +62,7 @@ spec:
       labels:
         app: registry
     spec:
-      hostname: registry.sea
+      hostname: registry
       nodeSelector:
         kubernetes.io/hostname: black-pearl.sea
       containers:
