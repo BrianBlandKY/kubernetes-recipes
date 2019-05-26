@@ -2,23 +2,23 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ingress-default-backend
-  namespace: default
+  namespace: hebron
   labels:
     app: ingress
     role: default-backend
 spec:
-  ports:
-    - port: 80
-      targetPort: http
   selector:
     app: ingress
     role: default-backend
+  ports:
+    - port: 80
+      targetPort: http
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ingress-default-backend
-  namespace: default
+  namespace: hebron
   labels:
     app: ingress
     role: default-backend

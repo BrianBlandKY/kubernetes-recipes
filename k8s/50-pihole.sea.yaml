@@ -1,3 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: hebron
+  name: pihole
+  labels:
+    app: pihole
+spec:
+  rules:
+    - host: pihole.sea
+      http:
+        paths:
+          - backend:
+              serviceName: pihole
+              servicePort: 8080
+            path: /
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,7 +27,7 @@ spec:
   ports: 
   - name: http        # Web Interface
     protocol: TCP
-    port: 8080        # Server Port
+    port: 8080          # Server Port
     targetPort: 80    # Pod Port
   - name: dns-tcp
     protocol: TCP
@@ -21,7 +38,7 @@ spec:
     port: 53
     targetPort: 53
   externalIPs:
-  - 10.0.0.10 # black-pearl
+  - 10.0.0.10
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -59,8 +76,6 @@ spec:
           value: 1.1.1.1
         - name: DNS2
           value: 1.0.0.1
-        # - name: ServerIP
-        #   value: 10.0.0.10 # Node IP Address
         ports:
         - containerPort: 80
           protocol: TCP
