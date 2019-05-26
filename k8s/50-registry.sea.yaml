@@ -1,16 +1,14 @@
-piVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  namespace: hebron
   name: registry
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    certmanager.k8s.io/issuer: letsencrypt
-    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+  namespace: hebron
   labels:
     app: registry
 spec:
-    - host: registry.sea
+  rules:
+  # It would be cool to use DNS Resolver for host but it doesn't work.
+    - host: registry.sea 
       http:
         paths:
           - backend:

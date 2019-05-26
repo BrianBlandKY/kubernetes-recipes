@@ -7,7 +7,8 @@ metadata:
     app: pihole
 spec:
   rules:
-    - host: pihole.sea
+  # It would be cool to use DNS Resolver for host but it doesn't work.
+    - host: pihole.sea 
       http:
         paths:
           - backend:
@@ -23,11 +24,13 @@ metadata:
 spec:
   selector:
     app: pihole
+  # Must use NodePort to expose service to external ip. 
+  # Hate doing it, but needed for 53 ports.
   type: NodePort
   ports: 
   - name: http        # Web Interface
     protocol: TCP
-    port: 8080          # Server Port
+    port: 8080        # Server Port
     targetPort: 80    # Pod Port
   - name: dns-tcp
     protocol: TCP
@@ -57,7 +60,7 @@ spec:
       labels:
         app: pihole
     spec:
-      hostname: pihole.sea
+      hostname: pihole
       nodeSelector:
         kubernetes.io/hostname: black-pearl.sea   
       containers:
