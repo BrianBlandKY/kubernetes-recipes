@@ -2,26 +2,26 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   namespace: tryhard
-  name: www
+  name: plex
   annotations:
     certmanager.k8s.io/issuer: letsencrypt
     nginx.ingress.kubernetes.io/proxy-body-size: 200m
   labels:
-    app: www
+    app: plex
 spec:
   rules:
     - host: tryhard.tv
       http:
         paths:
           - backend:
-              serviceName: www
+              serviceName: plex
               servicePort: 32400
             path: /
     - host: www.tryhard.tv
       http:
         paths:
           - backend:
-              serviceName: www
+              serviceName: plex
               servicePort: 32400
             path: /
   tls:
@@ -35,12 +35,12 @@ kind: Service
 metadata:
   namespace: tryhard
   labels:
-    app: www
-  name: www
+    app: plex
+  name: plex
 spec:
   type: NodePort
   selector:
-    app: www
+    app: plex
   ports: 
     - name: plex-tcp-3005
       protocol: TCP
@@ -85,7 +85,7 @@ apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
   namespace: tryhard
-  name: www
+  name: plex
 spec:
   secretname: tryhard-tv-tls
   issuerRef:
@@ -97,7 +97,7 @@ spec:
   acme:
     config:
       - http01:
-          ingress: www
+          ingress: plex
         domains:
           - tryhard.tv
           - www.tryhard.tv
@@ -106,24 +106,24 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: tryhard
-  name: www
+  name: plex
   labels:
-    app: www
+    app: plex
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: www   
+      app: plex   
   template:
     metadata:
       labels:
-        app: www
+        app: plex
     spec:
       hostname: davy-jones-media
       nodeSelector:
         kubernetes.io/hostname: flying-dutchman.sea   
       containers:
-        - name: www
+        - name: plex
           image: plexinc/pms-docker:1.15.6.1079-78232c603
           imagePullPolicy: IfNotPresent
           env:
