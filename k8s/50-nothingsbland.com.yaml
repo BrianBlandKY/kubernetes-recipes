@@ -130,6 +130,7 @@ metadata:
   labels:
     app: www
 spec:
+  storageClassName: nothingsbland-logs
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
