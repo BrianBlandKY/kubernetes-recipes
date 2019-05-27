@@ -9,6 +9,7 @@ metadata:
   labels:
     app: www
 spec:
+  rules:
     - host: nothingsbland.com
       http:
         paths:
