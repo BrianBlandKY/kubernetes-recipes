@@ -104,7 +104,7 @@ spec:
       volumes:
       - name: logs
         persistentVolumeClaim:
-        claimName: nothingsbland-logs
+          claimName: nothingsbland-logs
 ---
 apiVersion: v1
 kind: PersistentVolume
