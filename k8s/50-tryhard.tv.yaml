@@ -38,48 +38,36 @@ metadata:
     app: plex
   name: plex
 spec:
-  type: NodePort
   selector:
     app: plex
   ports: 
-    - name: plex-tcp-3005
-      protocol: TCP
+    - protocol: TCP
       port: 3005
       targetPort: 3005
-    - name: plex-tcp-8324
-      protocol: TCP
+    - protocol: TCP
       port: 8324
       targetPort: 8324
-    - name: plex-udp-1900
-      protocol: UDP
+    - protocol: UDP
       port: 1900
       targetPort: 1900
-    - name: plex-tcp-32400
-      protocol: TCP
+    - protocol: TCP
       port: 32400
       targetPort: 32400    
-    - name: plex-udp-32410
-      protocol: UDP
+    - protocol: UDP
       port: 32410
       targetPort: 32410
-    - name: plex-udp-32412
-      protocol: UDP
+    - protocol: UDP
       port: 32412
       targetPort: 32412
-    - name: plex-udp-32413
-      protocol: UDP
+    - protocol: UDP
       port: 32413
       targetPort: 32413
-    - name: plex-udp-32414
-      protocol: UDP
+    - protocol: UDP
       port: 32414
       targetPort: 32414
-    - name: plex-tcp-32469
-      protocol: TCP
+    - protocol: TCP
       port: 32469
-      targetPort: 32469
-  externalIPs:
-  - 10.0.0.11      
+      targetPort: 32469  
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
@@ -130,7 +118,7 @@ spec:
           - name: TZ
             value: "America/New_York"
           - name: ADVERTISE_IP
-            value: "https://10.0.0.11:32400/"
+            value: "https://tryhard.tv:32400/"
           ports:
           - containerPort: 1900    # (for access to the Plex DLNA Server)
             protocol: UDP
