@@ -132,7 +132,7 @@ metadata:
 spec:
   storageClassName: logs
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   volumeMode: Filesystem
   resources:
     requests:
