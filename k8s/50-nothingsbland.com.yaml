@@ -65,6 +65,34 @@ spec:
           - nothingsbland.com
           - www.nothingsbland.com
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs
+  namespace: nothingsbland
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /volume2/Apps/nothingsbland
+    server: davy-jones-locker.sea        
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs
+  namespace: nothingsbland
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -100,40 +128,9 @@ spec:
               memory: "100M"      # 100 MB
               cpu: "1m"           # .001 CPU (smallest unit possible)
           volumeMounts:
-          - mountPath: /apps/nothingsbland/logs
-            name: logs
-            readOnly: false
+          - name: logs
+            mountPath: /apps/nothingsbland/logs
       volumes:
       - name: logs
         persistentVolumeClaim:
           claimName: logs
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: logs
-  namespace: nothingsbland
-spec:
-  storageClassName: logs
-  capacity:
-    storage: 1Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteMany
-  nfs:
-    path: /volume2/Apps/nothingsbland
-    server: davy-jones-locker.sea        
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: logs
-  namespace: nothingsbland
-spec:
-  storageClassName: logs
-  accessModes:
-    - ReadWriteMany
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 1Gi
