@@ -106,12 +106,12 @@ spec:
       volumes:
       - name: logs
         persistentVolumeClaim:
-          claimName: nothingsbland-logs
+          claimName: logs
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nothingsbland-logs
+  name: logs
   namespace: nothingsbland
 spec:
   storageClassName: logs
@@ -126,6 +126,9 @@ spec:
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
+metadata:
+  name: logs
+  namespace: nothingsbland
 spec:
   storageClassName: logs
   accessModes:
@@ -133,5 +136,4 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 2Gi
----          
+      storage: 1Gi
