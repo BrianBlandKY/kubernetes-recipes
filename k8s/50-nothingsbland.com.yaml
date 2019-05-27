@@ -49,7 +49,7 @@ metadata:
   namespace: nothingsbland
   name: www
 spec:
-  secretname: www-tls
+  secretname: nothingsbland-com-tls
   issuerRef:
     name: letsencrypt
   commonName: nothingsbland.com
@@ -104,13 +104,29 @@ spec:
       volumes:
       - name: logs
         persistentVolumeClaim:
-        claimName: logs
+        claimName: nothingsbland-logs
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nothingsbland-logs
+  namespace: nothingsbland
+spec:
+  storageClassName: nothingsbland-logs
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /volume2/Apps/nothingsbland
+    server: davy-jones-locker.sea        
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: nothingsbland
-  name: www
+  name: nothingsbland-logs
   labels:
     app: www
 spec:
