@@ -27,7 +27,7 @@ spec:
     - hosts:
         - nothingsbland.com
         - www.nothingsbland.com
-      secretName: www-tls
+      secretName: nothingsbland-com-tls
 ---
 apiVersion: v1
 kind: Service
