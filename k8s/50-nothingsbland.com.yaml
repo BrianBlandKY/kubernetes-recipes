@@ -113,7 +113,6 @@ metadata:
   name: nothingsbland-logs
   namespace: nothingsbland
 spec:
-  storageClassName: nothingsbland-logs
   capacity:
     storage: 10Gi
   volumeMode: Filesystem
@@ -131,7 +130,6 @@ metadata:
   labels:
     app: www
 spec:
-  storageClassName: nothingsbland-logs
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
