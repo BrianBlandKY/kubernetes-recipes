@@ -29,8 +29,7 @@ spec:
   type: NodePort
   ports:
     - port: 5000
-      protocol: TCP
-      targetPort: 5000
+      targetPort: registry-port
   externalIPs:
   - 10.0.0.10      
 ---
@@ -90,7 +89,8 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         ports:
-          - containerPort: 5000
+          - name: registry-port
+            containerPort: 5000
             protocol: TCP
         resources:
          requests:
