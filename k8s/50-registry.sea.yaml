@@ -13,7 +13,7 @@ spec:
         paths:
           - backend:
               serviceName: registry
-              servicePort: 80
+              servicePort: 5000
             path: /
 ---
 apiVersion: v1
