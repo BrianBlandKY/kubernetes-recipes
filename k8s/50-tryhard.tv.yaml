@@ -38,11 +38,14 @@ metadata:
     app: plex
   name: plex
 spec:
+  type: NodePort
   selector:
     app: plex
   ports:
     - port: 32400
-      targetPort: www    
+      targetPort: www
+  externalIPs:
+  - 10.0.0.11	  # Node IP Address      
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
