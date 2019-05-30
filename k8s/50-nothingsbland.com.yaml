@@ -66,21 +66,6 @@ spec:
           - www.nothingsbland.com
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: logs
-  namespace: nothingsbland
-spec:
-  capacity:
-    storage: 1Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteMany
-  nfs:
-    path: /volume2/Apps/nothingsbland
-    server: davy-jones-locker.sea        
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: logs

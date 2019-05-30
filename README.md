@@ -1,28 +1,21 @@
 # kubernetes-recipes
 A collection of Kubernetes recipes.
 
-## Shawshank Namespace
-
-Internal services for personal usage.
+## Services
 
 - PiHole DNS Server
-- Samba Server
-- Plex Server
-- Others? (VPN?)
-
-## Development
-
-- Drone Server
-
-## NothingsBland Namespace
-
-- WebServer (Production)
-- WebServer (Internal)
+- Docker Registry
+- CertBot
+- Ingress
+- Plex Server (ingressed/nodeport)
+- Volumes NFS (broken)
 
 ## Usage
 
 ``` sh
-kubectl get all --namespace=shawshank           # View all elements for namespace 'shawshank'
-kubectl create -f shawshank/[SERVICE].yaml      # Create all elements defined in yaml spec
-kubectl delete -f shawshank/[SERVICE].yaml      # Delete all elements defines in yaml spec
+kubectl get all -n hebron           # View all elements for namespace 'hebron'
+kubectl create -f k8s/[SERVICE].yaml      # Create all elements defined in yaml spec
+kubectl delete -f k8s/[SERVICE].yaml      # Delete all elements defines in yaml spec
+kubectl scale deployment [SERVICE] --replicas=0 -n NAMESPACE # shutdown service by removing all pods (0)
+kubectl scale deployment [SERVICE] --replicas=1 -n NAMESPACE # start service by scaling pods (1)
 ```
