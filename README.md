@@ -18,4 +18,5 @@ kubectl create -f k8s/[SERVICE].yaml      # Create all elements defined in yaml 
 kubectl delete -f k8s/[SERVICE].yaml      # Delete all elements defines in yaml spec
 kubectl scale deployment [SERVICE] --replicas=0 -n NAMESPACE # shutdown service by removing all pods (0)
 kubectl scale deployment [SERVICE] --replicas=1 -n NAMESPACE # start service by scaling pods (1)
+kubectl get pv  # get PersistentVolumes
 ```
