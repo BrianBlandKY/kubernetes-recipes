@@ -5,5 +5,5 @@ metadata:
   name: kube-dns
   namespace: kube-system
 data:
-  upstreamNameservers: |
+  upstreamNameservers:
     ["8.8.8.8", "8.8.4.4"]

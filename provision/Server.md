@@ -13,6 +13,11 @@ visudo
 
 ```
 
+## Set Hostname
+```
+nano /etc/hostname
+```
+
 ## Static IP Configuration (Example)
 
 ``` vi
@@ -76,12 +81,15 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 # At this time, we could only get it working with docker 17.03.02
 cd /tmp
-wget https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch.rpm
+wget https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/containerd.io-1.2.6-3.3.fc28.x86_64.rpm
 
-wget https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-17.03.2.ce-1.el7.centos.x86_64.rpm
+wget https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/docker-ce-18.09.8-3.fc28.x86_64.rpm
 
-yum install -y docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch.rpm
-yum install -y docker-ce-17.03.2.ce-1.el7.centos.x86_64.rpm
+wget https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/docker-ce-cli-18.09.8-3.fc28.x86_64.rpm
+
+dnf install -y containerd.io-1.2.6-3.3.fc28.x86_64.rpm
+dnf install -y docker-ce-18.09.8-3.fc28.x86_64.rpm
+dnf install -y docker-ce-cli-18.09.8-3.fc28.x86_64.rpm
 
 # Confirm docker is running
 systemctl enable docker && systemctl start docker
@@ -98,7 +106,7 @@ cat << EOF > /etc/docker/daemon.json
 EOF
 
 # Install Kubernetes
-yum install -y kubelet kubeadm kubectl
+dnf install -y kubelet kubeadm kubectl
 
 # IPTables Fix
 # Edit /etc/sysctl.conf
